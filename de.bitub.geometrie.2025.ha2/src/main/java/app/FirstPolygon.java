@@ -57,6 +57,7 @@ public class FirstPolygon extends Application {
 					t.points[0].getX(), t.points[0].getY(), // point 0
 					t.points[1].getX(), t.points[1].getY(), // point 1
 					t.points[2].getX(), t.points[2].getY())); // point 2
+
 			shapes.getLast().setFill(Color.color(Math.random(), Math.random(), Math.random()));
 
 		}
