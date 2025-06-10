@@ -1,4 +1,4 @@
-package ModelTest;
+package tests;
 
 import model.Cube;
 import model.Point;

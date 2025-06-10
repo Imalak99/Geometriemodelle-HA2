@@ -40,6 +40,8 @@ public class PolygonProjectionTest {
 		List<List<PolygonPoint>> points2D = new ArrayList<>();
 		Map<PolygonPoint, Point> pointMap = PolygonProjection.projectTo2D(List.of(square), points2D);
 
+		System.out.println(pointMap);
+
 		// Überprüfen, ob die Projektion die richtige Anzahl von Punkten hat
 		assertEquals(1, points2D.size());
 		assertEquals(4, points2D.get(0).size());

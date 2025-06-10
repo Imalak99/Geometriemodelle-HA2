@@ -6,6 +6,7 @@ public class Face {
 
 	private HalfEdge outerHalfEdge;
 	private List<HalfEdge> holes;
+//	private List<Point> points;
 
 	public Face(HalfEdge outerHalfEdge, List<HalfEdge> holes) {
 		this.outerHalfEdge = outerHalfEdge;
