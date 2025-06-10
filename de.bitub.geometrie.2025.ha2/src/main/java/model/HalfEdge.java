@@ -46,4 +46,16 @@ public class HalfEdge {
 		this.twin = twin;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("HalfEdge[");
+		sb.append("org=").append(org != null ? org.toString() : "null");
+		sb.append(", prev org=").append(prev != null ? prev.org.toString() : "null");
+		sb.append(", next org=").append(next != null ? next.org.toString() : "null");
+		sb.append(", twin org=").append(twin != null ? twin.org.toString() : "null");
+		sb.append("]");
+		return sb.toString();
+	}
+
 }
