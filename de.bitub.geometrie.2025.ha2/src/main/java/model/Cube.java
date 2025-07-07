@@ -18,7 +18,7 @@ public class Cube {
 		initVertecies(p, edgeLenght);
 		initHalfEdges();
 		initFaces();
-		this.box = new Box(edgeLenght, edgeLenght, edgeLenght);
+//		this.box = new Box(edgeLenght, edgeLenght, edgeLenght);
 
 	}
 
