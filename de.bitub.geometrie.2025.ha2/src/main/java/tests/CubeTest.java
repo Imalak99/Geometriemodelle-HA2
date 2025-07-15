@@ -1,14 +1,16 @@
 package tests;
 
-import model.Cube;
-import model.Point;
+import javafx.scene.shape.TriangleMesh;
+import model.Polyhedron;
+import triangulation.Triangulation;
 
 public class CubeTest {
 	public static void main(String[] args) {
 
-		Point p = new Point(0, 0, 0);
-		Cube c = new Cube(p, 100);
-		System.out.println(c);
+		Polyhedron polyhedron = new Polyhedron(); // leeres Polyhedron-Objekt
+		polyhedron.exampleCube(); // diese Methode noch schreiben
+		System.out.println(polyhedron.toString());
+		TriangleMesh t = Triangulation.createTriangleMesh(polyhedron); // diese methode noch schreibe
 
 	}
 

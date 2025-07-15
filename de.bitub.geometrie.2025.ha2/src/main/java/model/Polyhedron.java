@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Polyhedron {
@@ -20,6 +21,12 @@ public class Polyhedron {
 		this.faces = faces;
 		this.halfEdges = halfEdges;
 		this.vertices = vertices;
+	}
+
+	public Polyhedron() {
+		this.faces = new ArrayList<>();
+		this.halfEdges = new ArrayList<>();
+		this.vertices = new ArrayList<>();
 	}
 
 	public List<Face> getFaces() {
@@ -55,6 +62,40 @@ public class Polyhedron {
 			sb.append(face.toString()).append("\n");
 		}
 		return sb.toString();
+	}
+
+	public static Polyhedron createExampleFace() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Polyhedron exampleCube() {
+		Point p = new Point(0, 0, 0);
+		double edgeLength = 1;
+		initVertecies(p, edgeLength);
+		return null;
+	}
+
+	private void initVertecies(Point p, double edgeLenght) {
+		vertices = new ArrayList<>(8);
+		vertices.add(p);
+		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1], p.xyz[2]));
+		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1] + edgeLenght, p.xyz[2]));
+		vertices.add(new Point(p.xyz[0], p.xyz[1] + edgeLenght, p.xyz[2]));
+
+		vertices.add(new Point(p.xyz[0], p.xyz[1], p.xyz[2] + edgeLenght));
+		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1], p.xyz[2] + edgeLenght));
+		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1] + edgeLenght, p.xyz[2] + edgeLenght));
+		vertices.add(new Point(p.xyz[0], p.xyz[1] + edgeLenght, p.xyz[2] + edgeLenght));
+
+//		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1], p.xyz[2]));
+//		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1], p.xyz[2] + edgeLenght));
+//		vertices.add(new Point(p.xyz[0], p.xyz[1], p.xyz[2] + edgeLenght));
+//		vertices.add(new Point(p.xyz[0], p.xyz[1] + edgeLenght, p.xyz[2]));
+//		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1] + edgeLenght, p.xyz[2]));
+//		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1] + edgeLenght, p.xyz[2] + edgeLenght));
+//		vertices.add(new Point(p.xyz[0], p.xyz[1] + edgeLenght, p.xyz[2] + edgeLenght));
+
 	}
 
 }

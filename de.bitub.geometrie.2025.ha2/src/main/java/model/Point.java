@@ -68,4 +68,31 @@ public class Point {
 		}
 		return result;
 	}
+
+	/**
+	 * Gibt die x-Koordinate des Punktes zurück.
+	 *
+	 * @return die x-Koordinate
+	 */
+	public double getX() {
+		return xyz[0];
+	}
+
+	/**
+	 * Gibt die y-Koordinate des Punktes zurück.
+	 *
+	 * @return die y-Koordinate
+	 */
+	public double getY() {
+		return xyz[1];
+	}
+
+	/**
+	 * Gibt die z-Koordinate des Punktes zurück.
+	 *
+	 * @return die z-Koordinate
+	 */
+	public double getZ() {
+		return xyz[2];
+	}
 }
