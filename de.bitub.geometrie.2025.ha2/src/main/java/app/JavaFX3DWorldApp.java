@@ -1,11 +1,15 @@
 package app;
 
+import java.util.Random;
+
 import fx3D.JavaFX3DWorldGroup;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.stage.Stage;
@@ -32,33 +36,29 @@ public class JavaFX3DWorldApp extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Polyhedron polyhedron = new Polyhedron(); // leeres Polyhedron-Objekt
-		polyhedron.exampleCube(); // diese Methode noch schreiben
+		// Cube erzeugen
+		Polyhedron cube = Polyhedron.cube();
+		Random rand = new Random();
+		System.out.println("Das ist der Cube\n" + cube);
 
-		TriangleMesh t = Triangulation.createTriangleMesh(polyhedron); // diese methode noch schreiben
+		// Triangulation des Polyeders
+		TriangleMesh mesh = Triangulation.createTriangleMesh(cube);
 
-//		Dass hier passiert dann alles in der createTriangleMesh Methode
-//		TriangleMesh t = new TriangleMesh();
-//		t.getPoints().addAll(P);
-//		System.out.println(F.length);
-//		t.getFaces().addAll(F[35], 0, F[34], 0, F[33], 0, F[32], 0, F[31], 0, F[30], 0, F[29], 0, F[28], 0, F[27], 0,
-//				F[26], 0, F[25], 0, F[24], 0, F[23], 0, F[22], 0, F[21], 0, F[20], 0, F[19], 0, F[18], 0, F[17], 0,
-//				F[16], 0, F[15], 0, F[14], 0, F[13], 0, F[12], 0, F[11], 0, F[10], 0, F[9], 0, F[8], 0, F[7], 0, F[6],
-//				0, F[5], 0, F[4], 0, F[3], 0, F[2], 0, F[1], 0, F[0], 0);
-//		t.getFaces().addAll(0, 0, 3, 0, 2, 0, 2, 0, 1, 0, 0,  );
-//		t.getTexCoords().setAll(0, 0);
+//		System.out.println(mesh.getPoints());
 
-		MeshView m = new MeshView(t);
+		// Create MeshView for the TriangleMesh
+		MeshView meshView = new MeshView(mesh);
+		// Set random colors for the triangles
+		meshView.setMaterial(new PhongMaterial(Color.color(rand.nextDouble(), rand.nextDouble(), rand.nextDouble())));
 
-		m.setScaleX(1);
-		m.setScaleY(1);
-		m.setOnMouseClicked(e -> m.setRotate(m.getRotate() + 20));
+		meshView.setScaleX(1);
+		meshView.setScaleY(1);
+		meshView.setOnMouseClicked(e -> meshView.setRotate(meshView.getRotate() + 20));
 
 		// Create World and add Model
 		JavaFX3DWorldGroup world = new JavaFX3DWorldGroup();
 
-//		world.getChildren().add(new MyCubeFX(2).getBox());
-		world.getChildren().add(m);
+		world.getChildren().add(meshView);
 
 		// Set Scene and start application
 		primaryStage.setScene(world.subScene);

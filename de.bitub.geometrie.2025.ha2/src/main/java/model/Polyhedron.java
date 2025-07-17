@@ -1,13 +1,14 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Polyhedron {
 
 	private List<Face> faces;
-	private List<HalfEdge> halfEdges;
-	private List<Point> vertices;
+	private List<HalfEdge> edges;
+	private List<Point> points;
 
 	/**
 	 * Konstruktor für Polyhedron, der die Listen von Faces, HalfEdges und Vertices
@@ -17,16 +18,12 @@ public class Polyhedron {
 	 * @param halfEdges die Liste der HalfEdges des Polyeders
 	 * @param vertices  die Liste der Vertices des Polyeders
 	 */
-	public Polyhedron(List<Face> faces, List<HalfEdge> halfEdges, List<Point> vertices) {
+	public Polyhedron(List<Face> faces) {
 		this.faces = faces;
-		this.halfEdges = halfEdges;
-		this.vertices = vertices;
 	}
 
 	public Polyhedron() {
 		this.faces = new ArrayList<>();
-		this.halfEdges = new ArrayList<>();
-		this.vertices = new ArrayList<>();
 	}
 
 	public List<Face> getFaces() {
@@ -37,65 +34,71 @@ public class Polyhedron {
 		this.faces = faces;
 	}
 
-	public List<HalfEdge> getHalfEdges() {
-		return halfEdges;
+	public List<HalfEdge> getEdges() {
+		return edges;
 	}
 
-	public void setHalfEdges(List<HalfEdge> halfEdges) {
-		this.halfEdges = halfEdges;
+	public void setEdges(List<HalfEdge> edges) {
+		this.edges = edges;
 	}
 
-	public List<Point> getVertices() {
-		return vertices;
+	public List<Point> getPoints() {
+		return points;
 	}
 
-	public void setVertices(List<Point> vertices) {
-		this.vertices = vertices;
+	public void setPoints(List<Point> points) {
+		this.points = points;
+	}
+
+	public static Polyhedron cube() {
+		System.out.println("Methode cube aufgerufen");
+		Point p0 = new Point(0, 0, 0);
+		Point p1 = new Point(1, 0, 0);
+		Point p2 = new Point(1, 1, 0);
+		Point p3 = new Point(0, 1, 0);
+		Point p4 = new Point(0, 0, 1);
+		Point p5 = new Point(1, 0, 1);
+		Point p6 = new Point(1, 1, 1);
+		Point p7 = new Point(0, 1, 1);
+		List<Point> points = new ArrayList<>(Arrays.asList(p0, p1, p2, p3, p4, p5, p6, p7));
+//		System.out.println(points);
+		int[][] indexFaceList = { { 0, 3, 2, 1 }, // Bottom Face
+				{ 4, 5, 6, 7 }, // Top Face
+				{ 0, 1, 5, 4 }, // Left Face
+				{ 2, 3, 7, 6 }, // Right Face
+				{ 0, 4, 7, 3 }, // Front Face
+				{ 1, 2, 6, 5 } // Back Face
+		};
+
+		List<Face> faces = new ArrayList<>();
+		List<HalfEdge> edges = new ArrayList<>();
+		for (int[] oneFaceAsIndexList : indexFaceList) {
+			List<Point> facePoints = new ArrayList<>(
+					Arrays.asList(points.get(oneFaceAsIndexList[0]), points.get(oneFaceAsIndexList[1]),
+							points.get(oneFaceAsIndexList[2]), points.get(oneFaceAsIndexList[3])));
+			HalfEdge he = HalfEdgeUtil.buildPolygon(facePoints);
+			List<HalfEdge> allHalfEdgesPerFace = HalfEdge.allHalfEdgesPerFace(he);
+//			System.out.println(allHalfEdgesPerFace);
+			edges.addAll(allHalfEdgesPerFace);
+			Face face = new Face(he);
+			faces.add(face);
+		}
+//		System.out.println(faces);
+		Polyhedron cube = new Polyhedron(faces);
+		cube.setPoints(points);
+		cube.setEdges(edges);
+		return cube;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Polyhedron with ").append(faces.size()).append(" faces, ").append(halfEdges.size())
-				.append(" half-edges, and ").append(vertices.size()).append(" vertices.\n");
+		sb.append("Polyhedron with ").append(faces.size()).append(" faces:\n");
 		for (Face face : faces) {
-			sb.append(face.toString()).append("\n");
+			sb.append(face);
+			sb.append("\n");
 		}
 		return sb.toString();
-	}
-
-	public static Polyhedron createExampleFace() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Polyhedron exampleCube() {
-		Point p = new Point(0, 0, 0);
-		double edgeLength = 1;
-		initVertecies(p, edgeLength);
-		return null;
-	}
-
-	private void initVertecies(Point p, double edgeLenght) {
-		vertices = new ArrayList<>(8);
-		vertices.add(p);
-		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1], p.xyz[2]));
-		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1] + edgeLenght, p.xyz[2]));
-		vertices.add(new Point(p.xyz[0], p.xyz[1] + edgeLenght, p.xyz[2]));
-
-		vertices.add(new Point(p.xyz[0], p.xyz[1], p.xyz[2] + edgeLenght));
-		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1], p.xyz[2] + edgeLenght));
-		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1] + edgeLenght, p.xyz[2] + edgeLenght));
-		vertices.add(new Point(p.xyz[0], p.xyz[1] + edgeLenght, p.xyz[2] + edgeLenght));
-
-//		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1], p.xyz[2]));
-//		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1], p.xyz[2] + edgeLenght));
-//		vertices.add(new Point(p.xyz[0], p.xyz[1], p.xyz[2] + edgeLenght));
-//		vertices.add(new Point(p.xyz[0], p.xyz[1] + edgeLenght, p.xyz[2]));
-//		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1] + edgeLenght, p.xyz[2]));
-//		vertices.add(new Point(p.xyz[0] + edgeLenght, p.xyz[1] + edgeLenght, p.xyz[2] + edgeLenght));
-//		vertices.add(new Point(p.xyz[0], p.xyz[1] + edgeLenght, p.xyz[2] + edgeLenght));
-
 	}
 
 }

@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Face {
@@ -33,10 +34,45 @@ public class Face {
 		this.holes = holes;
 	}
 
+	public List<Point> getOrderedBoundaryPoints() {
+		List<Point> points = new ArrayList<>();
+		HalfEdge start = this.getHalfEdge(); // Startkante des äußeren Randes
+		if (start == null)
+			return points;
+
+		HalfEdge current = start;
+		do {
+			points.add(current.getOrg());
+			current = current.getNext();
+		} while (current != null && current != start);
+
+		return points;
+	}
+
 	@Override
 	public String toString() {
-		return "Face [halfEdge=" + outerHalfEdge.getOrg().xyz[0] + ", " + outerHalfEdge.getOrg().xyz[1] + ", "
-				+ outerHalfEdge.getOrg().xyz[2] + "]";
+		StringBuilder sb = new StringBuilder();
+		sb.append("Face:\n");
+
+		// Outer boundary
+		if (outerHalfEdge != null) {
+			sb.append("  Outer: ");
+			sb.append(outerHalfEdge.toStringFullLoop());
+			sb.append("\n");
+		}
+
+		// Holes
+		if (holes != null && !holes.isEmpty()) {
+			int i = 1;
+			for (HalfEdge hole : holes) {
+				sb.append("  Hole ").append(i).append(": ");
+				sb.append(hole.toStringFullLoop());
+				sb.append("\n");
+				i++;
+			}
+		}
+
+		return sb.toString();
 	}
 
 }

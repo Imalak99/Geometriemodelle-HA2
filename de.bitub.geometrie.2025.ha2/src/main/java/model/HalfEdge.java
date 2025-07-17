@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author FG Bauinformatik
@@ -46,15 +49,46 @@ public class HalfEdge {
 		this.twin = twin;
 	}
 
+	public static List<HalfEdge> allHalfEdgesPerFace(HalfEdge start) {
+		List<HalfEdge> result = new ArrayList<>();
+		HalfEdge current = start;
+
+		int count = 0;
+		do {
+			result.add(current);
+			current = current.getNext();
+			count++;
+			if (count > 1000) {
+				System.err.println("Loop exceeded limit – possibly broken structure.");
+				break;
+			}
+		} while (current != null && current != start);
+
+		return result;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("HalfEdge[");
-		sb.append("org=").append(org != null ? org.toString() : "null");
-		sb.append(", prev org=").append(prev != null ? prev.org.toString() : "null");
-		sb.append(", next org=").append(next != null ? next.org.toString() : "null");
-		sb.append(", twin org=").append(twin != null ? twin.org.toString() : "null");
-		sb.append("]");
+		sb.append("HalfEdge Loop: ");
+
+		HalfEdge start = this;
+		HalfEdge current = start;
+		int count = 0;
+
+		do {
+			sb.append(current.getOrg());
+			current = current.getNext();
+			if (current != start) {
+				sb.append(" -> ");
+			}
+			count++;
+			if (count > 1000) { // Schutz gegen Endlosschleife bei fehlerhafter Verkettung
+				sb.append("... (loop break)");
+				break;
+			}
+		} while (current != null && current != start);
+
 		return sb.toString();
 	}
 
