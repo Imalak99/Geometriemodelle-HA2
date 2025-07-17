@@ -58,4 +58,28 @@ public class HalfEdge {
 		return sb.toString();
 	}
 
+	public String toStringFullLoop() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("HalfEdge Loop: ");
+
+		HalfEdge start = this;
+		HalfEdge current = start;
+		int count = 0;
+
+		do {
+			sb.append(current.getOrg());
+			current = current.getNext();
+			if (current != start) {
+				sb.append(" -> ");
+			}
+			count++;
+			if (count > 1000) { // Schutz gegen Endlosschleife bei fehlerhafter Verkettung
+				sb.append("... (loop break)");
+				break;
+			}
+		} while (current != null && current != start);
+
+		return sb.toString();
+	}
+
 }
