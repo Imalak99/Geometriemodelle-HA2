@@ -57,7 +57,7 @@ public class Face {
 		// Outer boundary
 		if (outerHalfEdge != null) {
 			sb.append("  Outer: ");
-			sb.append(outerHalfEdge.toStringFullLoop());
+			sb.append(outerHalfEdge.toString());
 			sb.append("\n");
 		}
 
@@ -66,7 +66,7 @@ public class Face {
 			int i = 1;
 			for (HalfEdge hole : holes) {
 				sb.append("  Hole ").append(i).append(": ");
-				sb.append(hole.toStringFullLoop());
+				sb.append(hole.toString());
 				sb.append("\n");
 				i++;
 			}

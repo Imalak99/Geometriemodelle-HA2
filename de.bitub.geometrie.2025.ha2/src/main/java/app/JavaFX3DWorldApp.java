@@ -20,28 +20,21 @@ import triangulation.Triangulation;
 /** JavaFX Application to run the 3D example */
 public class JavaFX3DWorldApp extends Application {
 
-	// Points: (0,0,0),(1,0,0),(1,1,0),(0,1,0)
-	static final float[] P = { 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-			1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f
-
-	};
-
-	// Triangle Faces: [0,1,2,3] -> [0,1,2][2,3,0]
-	static final int[] F = { 0, 1, 2, 2, 3, 0, 4, 5, 6, 6, 7, 4, 0, 1, 5, 5, 4, 0, 1, 2, 6, 6, 5, 1, 2, 3, 7, 7, 6, 2,
-			3, 0, 4, 4, 7, 3 };
-
 	public static void main(String[] args) {
 		launch(args);
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+
 		// Cube erzeugen
 		Polyhedron cube = Polyhedron.cube();
 		Random rand = new Random();
 		System.out.println("Das ist der Cube\n" + cube);
 
-		// Triangulation des Polyeders
+		// hallo bist du
+
+		// Triangulation der einzelnen Flächen des Polyeders
 		TriangleMesh mesh = Triangulation.createTriangleMesh(cube);
 
 //		System.out.println(mesh.getPoints());

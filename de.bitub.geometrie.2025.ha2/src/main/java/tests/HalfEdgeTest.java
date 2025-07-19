@@ -18,7 +18,7 @@ public class HalfEdgeTest {
 		List<Point> points = new ArrayList<>(Arrays.asList(p0, p1, p2, p3));
 		HalfEdge he0 = HalfEdgeUtil.buildPolygon(points);
 
-		System.out.println(he0.toStringFullLoop());
+		System.out.println(he0.toString());
 	}
 
 }

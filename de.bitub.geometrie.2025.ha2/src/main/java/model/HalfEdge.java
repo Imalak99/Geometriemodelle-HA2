@@ -70,25 +70,23 @@ public class HalfEdge {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("HalfEdge Loop: ");
-
-		HalfEdge start = this;
-		HalfEdge current = start;
-		int count = 0;
-
-		do {
-			sb.append(current.getOrg());
-			current = current.getNext();
-			if (current != start) {
-				sb.append(" -> ");
-			}
-			count++;
-			if (count > 1000) { // Schutz gegen Endlosschleife bei fehlerhafter Verkettung
-				sb.append("... (loop break)");
-				break;
-			}
-		} while (current != null && current != start);
-
+		sb.append("HalfEdge: ");
+		sb.append("Org: ").append(org);
+		if (prev != null) {
+			sb.append(", Prev: ").append(prev.getOrg());
+		} else {
+			sb.append(", Prev: null");
+		}
+		if (next != null) {
+			sb.append(", Next: ").append(next.getOrg());
+		} else {
+			sb.append(", Next: null");
+		}
+		if (twin != null) {
+			sb.append(", Twin: ").append(twin.getOrg());
+		} else {
+			sb.append(", Twin: null");
+		}
 		return sb.toString();
 	}
 

@@ -70,7 +70,9 @@ public class Polyhedron {
 				{ 1, 2, 6, 5 } // Back Face
 		};
 
+		// Facelist erstellen
 		List<Face> faces = new ArrayList<>();
+		// Edges erstellen um Faces zu erstellen
 		List<HalfEdge> edges = new ArrayList<>();
 		for (int[] oneFaceAsIndexList : indexFaceList) {
 			List<Point> facePoints = new ArrayList<>(
@@ -83,6 +85,14 @@ public class Polyhedron {
 			Face face = new Face(he);
 			faces.add(face);
 		}
+
+		// Fuer jede HalfEdge den Twin setzen
+		for (int i = 0; i < faces.size(); i++) {
+			for (int j = i + 1; j < faces.size(); j++) {
+				HalfEdgeUtil.connectTwoPolygons(faces.get(i).getHalfEdge(), faces.get(j).getHalfEdge());
+			}
+		}
+
 //		System.out.println(faces);
 		Polyhedron cube = new Polyhedron(faces);
 		cube.setPoints(points);
