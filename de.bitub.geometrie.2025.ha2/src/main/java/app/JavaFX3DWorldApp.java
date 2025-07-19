@@ -1,5 +1,6 @@
 package app;
 
+import java.util.List;
 import java.util.Random;
 
 import fx3D.JavaFX3DWorldGroup;
@@ -14,6 +15,8 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import model.Face;
+import model.Point;
 import model.Polyhedron;
 import triangulation.Triangulation;
 
@@ -31,27 +34,48 @@ public class JavaFX3DWorldApp extends Application {
 		Polyhedron cube = Polyhedron.cube();
 		Random rand = new Random();
 		System.out.println("Das ist der Cube\n" + cube);
+		// Create World and add Model
+		JavaFX3DWorldGroup world = new JavaFX3DWorldGroup();
 
-		// hallo bist du
+		for (Face face : cube.getFaces()) {
+
+			List<List<Point>> triangles = Triangulation.triangulateFace(face);
+			for (List<Point> list : triangles) {
+				TriangleMesh triangleMesh = new TriangleMesh();
+				System.out.println(list);
+				for (Point p : list) {
+					System.out.println(p);
+					triangleMesh.getPoints().addAll((float) p.getX(), (float) p.getY(), (float) p.getZ());
+
+				}
+				triangleMesh.getTexCoords().addAll(0, 0);
+				triangleMesh.getFaces().addAll(0, 0, 1, 0, 2, 0);
+				MeshView meshView = new MeshView(triangleMesh);
+				meshView.setMaterial(
+						new PhongMaterial(Color.color(rand.nextDouble(), rand.nextDouble(), rand.nextDouble())));
+
+				meshView.setScaleX(1);
+				meshView.setScaleY(1);
+				meshView.setOnMouseClicked(e -> meshView.setRotate(meshView.getRotate() + 20));
+				world.getChildren().add(meshView);
+			}
+		}
 
 		// Triangulation der einzelnen Flächen des Polyeders
-		TriangleMesh mesh = Triangulation.createTriangleMesh(cube);
+
+//		List<Point> trianlge = triangles.get(0);
+
+		// Dummy texture coords (required)
+
+		// One triangle
+
+//		TriangleMesh mesh = Triangulation.createTriangleMesh(cube);
 
 //		System.out.println(mesh.getPoints());
 
 		// Create MeshView for the TriangleMesh
-		MeshView meshView = new MeshView(mesh);
+
 		// Set random colors for the triangles
-		meshView.setMaterial(new PhongMaterial(Color.color(rand.nextDouble(), rand.nextDouble(), rand.nextDouble())));
-
-		meshView.setScaleX(1);
-		meshView.setScaleY(1);
-		meshView.setOnMouseClicked(e -> meshView.setRotate(meshView.getRotate() + 20));
-
-		// Create World and add Model
-		JavaFX3DWorldGroup world = new JavaFX3DWorldGroup();
-
-		world.getChildren().add(meshView);
 
 		// Set Scene and start application
 		primaryStage.setScene(world.subScene);

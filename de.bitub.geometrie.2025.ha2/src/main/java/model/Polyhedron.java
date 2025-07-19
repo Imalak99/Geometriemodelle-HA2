@@ -89,7 +89,7 @@ public class Polyhedron {
 		// Fuer jede HalfEdge den Twin setzen
 		for (int i = 0; i < faces.size(); i++) {
 			for (int j = i + 1; j < faces.size(); j++) {
-				HalfEdgeUtil.connectTwoPolygons(faces.get(i).getHalfEdge(), faces.get(j).getHalfEdge());
+				HalfEdgeUtil.connectTwoPolygons(faces.get(i).getOuterHalfEdge(), faces.get(j).getOuterHalfEdge());
 			}
 		}
 

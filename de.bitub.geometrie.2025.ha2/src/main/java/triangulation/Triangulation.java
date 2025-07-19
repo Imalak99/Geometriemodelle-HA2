@@ -1,7 +1,6 @@
 package triangulation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,63 +9,62 @@ import org.poly2tri.geometry.polygon.Polygon;
 import org.poly2tri.geometry.polygon.PolygonPoint;
 import org.poly2tri.triangulation.delaunay.DelaunayTriangle;
 
-import javafx.scene.shape.TriangleMesh;
 import model.Face;
+import model.HalfEdge;
 import model.Point;
-import model.Polyhedron;
 import projection.PolygonProjection;
 
 public class Triangulation {
 
-	public static TriangleMesh createTriangleMesh(Polyhedron polyhedron) {
-		System.out.println("Methode createTriangleMesh aufgerufen");
-		TriangleMesh mesh = new TriangleMesh();
+	/**
+	 * Trianguliert eine beliebige Face und gibt eine Liste mit den Dreiecken zurück
+	 * 
+	 * @param face
+	 * @return Liste der Dreiecke
+	 */
+//	public static List<List<Point>> triangulateFace(Face face) {
+//		List<List<Point>> result = new ArrayList<>();
+//		List<Point> firstTriangle = new ArrayList<Point>();
+//		firstTriangle.addAll(Arrays.asList(new Point(0, 0, 0), new Point(1, 0, 0), new Point(1, 1, 0)));
+//
+//		result.add(firstTriangle);
+//
+//		return result;
+//	}
 
-		List<Face> faces = polyhedron.getFaces();
-		System.out.println("Liste der Faces: " + faces);
+	public static List<List<Point>> triangulateFace(Face face) {
+		// Schritt 1: 3D-Ränder sammeln
+		List<List<Point>> boundaries3d = new ArrayList<>();
+		boundaries3d.add(face.getOrderedBoundaryPoints());
 
-		Map<Point, Integer> pointIndexMap = new HashMap<>();
-		int indexCounter = 0;
-
-		for (Face face : faces) {
-
-			List<Point> boundary = face.getOrderedBoundaryPoints();
-
-			List<List<Point>> boundaries = List.of(boundary); // aktuell keine Löcher
-			System.out.println("Das sind die Boundariepoints des Face:\n " + boundaries);
-			List<List<PolygonPoint>> points2D = new ArrayList<>();
-
-			Map<PolygonPoint, Point> pointMap = PolygonProjection.projectTo2D(boundaries, points2D);
-			List<PolygonPoint> projectedPoints = points2D.get(0);
-
-			Polygon polygon = new Polygon(projectedPoints);
-			Poly2Tri.triangulate(polygon);
-			List<DelaunayTriangle> triangles = polygon.getTriangles();
-
-			for (DelaunayTriangle triangle : triangles) {
-				for (PolygonPoint pp : new PolygonPoint[] { (PolygonPoint) triangle.points[0],
-						(PolygonPoint) triangle.points[1], (PolygonPoint) triangle.points[2] }) {
-					Point p = pointMap.get(pp);
-					if (!pointIndexMap.containsKey(p)) {
-						mesh.getPoints().addAll((float) p.xyz[0], (float) p.xyz[1], (float) p.xyz[2]);
-						pointIndexMap.put(p, indexCounter++);
-					}
-				}
-
-				// Triangle indices (JavaFX needs vertexIndex, texCoordIndex) → we use
-				// texCoordIndex = 0
-				int i0 = pointIndexMap.get(pointMap.get((PolygonPoint) triangle.points[0]));
-				int i1 = pointIndexMap.get(pointMap.get((PolygonPoint) triangle.points[1]));
-				int i2 = pointIndexMap.get(pointMap.get((PolygonPoint) triangle.points[2]));
-
-				mesh.getFaces().addAll(i0, 0, i1, 0, i2, 0);
-			}
-
+		for (HalfEdge holeStart : face.getHoles()) {
+			if (holeStart == null)
+				continue;
+			boundaries3d.add(Face.getPointsFromStartHalfEdge(holeStart));
 		}
 
-		mesh.getTexCoords().setAll(0, 0);
+		// Schritt 2: Projektion in 2D
+		List<List<PolygonPoint>> points2D = new ArrayList<>();
+		Map<PolygonPoint, Point> pointMap = PolygonProjection.projectTo2D(boundaries3d, points2D);
 
-		return mesh;
+		// Schritt 3: Poly2Tri
+		Polygon polygon2d = new Polygon(points2D.get(0));
+		for (int i = 1; i < points2D.size(); i++) {
+			polygon2d.addHole(new Polygon(points2D.get(i)));
+		}
+		Poly2Tri.triangulate(polygon2d);
+
+		// Schritt 4: Rückabbildung der Dreiecke in 3D
+		List<List<Point>> triangles3D = new ArrayList<>();
+		for (DelaunayTriangle triangle2D : polygon2d.getTriangles()) {
+			List<Point> triangle3D = new ArrayList<>(3);
+			for (int i = 0; i < 3; i++) {
+				triangle3D.add(pointMap.get(triangle2D.points[i]));
+			}
+			triangles3D.add(triangle3D);
+		}
+//		System.out.println(triangles3D);
+		return triangles3D;
 	}
 
 }

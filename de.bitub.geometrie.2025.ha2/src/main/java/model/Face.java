@@ -6,7 +6,7 @@ import java.util.List;
 public class Face {
 
 	private HalfEdge outerHalfEdge;
-	private List<HalfEdge> holes;
+	private List<HalfEdge> holes = new ArrayList<HalfEdge>();
 //	private List<Point> points;
 
 	public Face(HalfEdge outerHalfEdge, List<HalfEdge> holes) {
@@ -18,7 +18,7 @@ public class Face {
 		this.outerHalfEdge = halfEdge;
 	}
 
-	public HalfEdge getHalfEdge() {
+	public HalfEdge getOuterHalfEdge() {
 		return outerHalfEdge;
 	}
 
@@ -36,7 +36,7 @@ public class Face {
 
 	public List<Point> getOrderedBoundaryPoints() {
 		List<Point> points = new ArrayList<>();
-		HalfEdge start = this.getHalfEdge(); // Startkante des äußeren Randes
+		HalfEdge start = this.getOuterHalfEdge(); // Startkante des äußeren Randes
 		if (start == null)
 			return points;
 
@@ -45,6 +45,19 @@ public class Face {
 			points.add(current.getOrg());
 			current = current.getNext();
 		} while (current != null && current != start);
+
+		return points;
+	}
+
+	public static List<Point> getPointsFromStartHalfEdge(HalfEdge start) {
+		List<Point> points = new ArrayList<>();
+		if (start == null)
+			return points;
+		HalfEdge e = start;
+		do {
+			points.add(e.getOrg());
+			e = e.getNext();
+		} while (e != null && e != start);
 
 		return points;
 	}

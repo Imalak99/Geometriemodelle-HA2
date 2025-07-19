@@ -9,7 +9,7 @@ public class CubeTest {
 		Polyhedron cube = Polyhedron.cube();
 
 		Face c = cube.getFaces().get(0);
-		System.out.println(c.getHalfEdge());
+		System.out.println(c.getOuterHalfEdge());
 //		System.out.println(cube.getEdges().size() + " Kanten");
 
 //		for (Face f : cube.getFaces()) {
