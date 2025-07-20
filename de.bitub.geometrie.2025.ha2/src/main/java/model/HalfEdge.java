@@ -76,29 +76,45 @@ public class HalfEdge {
 		return result;
 	}
 
+//	@Override
+//	public String toString() {
+//		StringBuilder sb = new StringBuilder();
+//		sb.append("HalfEdge: ");
+//		sb.append("Org: ").append(org);
+//		if (prev != null) {
+//			sb.append(", Prev: ").append(prev.getOrg());
+//		} else {
+//			sb.append(", Prev: null");
+//		}
+//		if (next != null) {
+//			sb.append(", Next: ").append(next.getOrg());
+//		} else {
+//			sb.append(", Next: null");
+//		}
+//		if (twin != null) {
+//			sb.append(", Twin: ").append(twin.getOrg());
+//		} else {
+//			sb.append(", Twin: null");
+//		}
+//		// kürzer String zum schnellen Debuggen
+//		return "he: org = " + org.getX() + "  " + org.getY() + "  " + org.getZ() + "\ntwin = " + twin.getOrg().getX()
+//				+ "  " + twin.getOrg().getY() + "  " + twin.getOrg().getZ() + "\n";
+////		return sb.toString();
+//	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("HalfEdge: ");
-		sb.append("Org: ").append(org);
-		if (prev != null) {
-			sb.append(", Prev: ").append(prev.getOrg());
+		sb.append("he: org = ").append(org.getX()).append("  ").append(org.getY()).append("  ").append(org.getZ())
+				.append("\n");
+
+		if (twin != null && twin.getOrg() != null) {
+			sb.append("twin = ").append(twin.getOrg().getX()).append("  ").append(twin.getOrg().getY()).append("  ")
+					.append(twin.getOrg().getZ());
 		} else {
-			sb.append(", Prev: null");
+			sb.append("twin = null");
 		}
-		if (next != null) {
-			sb.append(", Next: ").append(next.getOrg());
-		} else {
-			sb.append(", Next: null");
-		}
-		if (twin != null) {
-			sb.append(", Twin: ").append(twin.getOrg());
-		} else {
-			sb.append(", Twin: null");
-		}
-		// kürzer String zum schnellen Debuggen
-		return "he: org = " + org;
-//		return sb.toString();
+		return sb.toString();
 	}
 
 	public String toStringFullLoop() {

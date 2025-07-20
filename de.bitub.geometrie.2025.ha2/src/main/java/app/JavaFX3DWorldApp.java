@@ -16,8 +16,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.Face;
 import model.Polyhedron;
-import tests.NeighborhoodAnalysisTest;
-import tests.TriangulationTest;
 
 /** JavaFX Application to run the 3D example */
 public class JavaFX3DWorldApp extends Application {
@@ -30,18 +28,27 @@ public class JavaFX3DWorldApp extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		// verschiedene Polyeder erzeugen und testen
-		Polyhedron cube = Polyhedron.cube();
-		Polyhedron facWithHole = TriangulationTest.faceWithHole();
-		Polyhedron triangleFace = TriangulationTest.triangleFace();
-		Polyhedron multiPointsFace = TriangulationTest.multiPointsFace();
-		Polyhedron threeFacesPoly = NeighborhoodAnalysisTest.threeFacesPoly();
+//		Polyhedron cube = Polyhedron.cube();
+//		Polyhedron facWithHole = TriangulationTest.faceWithHole();
+//		Polyhedron triangleFace = TriangulationTest.triangleFace();
+//		Polyhedron multiPointsFace = TriangulationTest.multiPointsFace();
+//		Polyhedron threeFacesPoly = NeighborhoodAnalysisTest.threeFacesPoly();
+		Polyhedron cuboidGenus2 = Polyhedron.cuboidGenus2();
+
+		// Zum debuggen hier weiter machen!!
+		List<Face> facelist = cuboidGenus2.getFaces();
+		for (Face f : facelist) {
+			System.out.println(f.getOuterHalfEdge());
+			System.out.println(f.getHoles());
+		}
+
 		Polyhedron icosahedron1 = Polyhedron.icosahedron();
 		Polyhedron torus = Polyhedron.torus();
 		Polyhedron torus2 = Polyhedron.torus(48, 24);
+		Polyhedron cubeNonWaterTight = Polyhedron.cubeNonWaterTight();
 
 		// Liste mit allen Polyedern
-		List<Polyhedron> polyhedra = List.of(torus, torus2, icosahedron1, facWithHole, triangleFace, multiPointsFace,
-				threeFacesPoly);
+		List<Polyhedron> polyhedra = List.of(cuboidGenus2, cubeNonWaterTight, torus, torus2, icosahedron1);
 
 		// Create World and add Model
 		JavaFX3DWorldGroup world = new JavaFX3DWorldGroup();
