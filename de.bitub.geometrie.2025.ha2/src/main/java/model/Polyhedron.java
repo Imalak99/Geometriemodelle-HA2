@@ -51,7 +51,7 @@ public class Polyhedron {
 	}
 
 	public static Polyhedron cube() {
-		System.out.println("Methode cube aufgerufen");
+		// Alle Punkte des Würfels
 		Point p0 = new Point(0, 0, 0);
 		Point p1 = new Point(1, 0, 0);
 		Point p2 = new Point(1, 1, 0);
@@ -60,8 +60,9 @@ public class Polyhedron {
 		Point p5 = new Point(1, 0, 1);
 		Point p6 = new Point(1, 1, 1);
 		Point p7 = new Point(0, 1, 1);
+		// Punkte in eine Liste packen
 		List<Point> points = new ArrayList<>(Arrays.asList(p0, p1, p2, p3, p4, p5, p6, p7));
-//		System.out.println(points);
+		// Indizes der Punkte für die Faces des Würfels
 		int[][] indexFaceList = { { 0, 3, 2, 1 }, // Bottom Face
 				{ 4, 5, 6, 7 }, // Top Face
 				{ 0, 1, 5, 4 }, // Left Face
@@ -69,32 +70,38 @@ public class Polyhedron {
 				{ 0, 4, 7, 3 }, // Front Face
 				{ 1, 2, 6, 5 } // Back Face
 		};
-
-		// Facelist erstellen
+		// leere Facelist erstellen
 		List<Face> faces = new ArrayList<>();
-		// Edges erstellen um Faces zu erstellen
+		// leere Edge-Liste erstellen
 		List<HalfEdge> edges = new ArrayList<>();
+		// Durch indexFaceList iterieren
 		for (int[] oneFaceAsIndexList : indexFaceList) {
+			// Liste der Punkte für eine Face erstellen
 			List<Point> facePoints = new ArrayList<>(
 					Arrays.asList(points.get(oneFaceAsIndexList[0]), points.get(oneFaceAsIndexList[1]),
 							points.get(oneFaceAsIndexList[2]), points.get(oneFaceAsIndexList[3])));
+			// Für diese Face eine HalfEdge erstellen
 			HalfEdge he = HalfEdgeUtil.buildPolygon(facePoints);
+			// Alle HalfEdges der Face sammeln
 			List<HalfEdge> allHalfEdgesPerFace = HalfEdge.allHalfEdgesPerFace(he);
-//			System.out.println(allHalfEdgesPerFace);
+			// HalfEdges zu der Edge-Liste hinzufügen
 			edges.addAll(allHalfEdgesPerFace);
+			// Face erstellen mit der start HalfEdge
 			Face face = new Face(he);
+			// Face zu der Facelist hinzufügen
 			faces.add(face);
 		}
-
 		// Fuer jede HalfEdge den Twin setzen
+		// doppelt durch die faces iterieren, um jede Face mit jeder anderen Face zu
+		// vergleichen
 		for (int i = 0; i < faces.size(); i++) {
 			for (int j = i + 1; j < faces.size(); j++) {
 				HalfEdgeUtil.connectTwoPolygons(faces.get(i).getOuterHalfEdge(), faces.get(j).getOuterHalfEdge());
 			}
 		}
-
-//		System.out.println(faces);
+		// Cube erstellen mit den Faces
 		Polyhedron cube = new Polyhedron(faces);
+		// Dem cube die Punkte und Kanten zuweisen
 		cube.setPoints(points);
 		cube.setEdges(edges);
 		return cube;

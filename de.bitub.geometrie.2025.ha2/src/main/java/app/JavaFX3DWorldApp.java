@@ -1,6 +1,9 @@
 package app;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import fx3D.JavaFX3DWorldGroup;
@@ -15,10 +18,12 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import logic.Triangulation;
 import model.Face;
 import model.Point;
 import model.Polyhedron;
-import triangulation.Triangulation;
+import tests.NeighborhoodAnalysisTest;
+import tests.TriangulationTest;
 
 /** JavaFX Application to run the 3D example */
 public class JavaFX3DWorldApp extends Application {
@@ -30,54 +35,51 @@ public class JavaFX3DWorldApp extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		// Cube erzeugen
+		// verschiedene Polyeder erzeugen und testen
 		Polyhedron cube = Polyhedron.cube();
+		Polyhedron facWithHole = TriangulationTest.faceWithHole();
+		Polyhedron triangleFace = TriangulationTest.triangleFace();
+		Polyhedron multiPointsFace = TriangulationTest.multiPointsFace();
+		Polyhedron threeFacesPoly = NeighborhoodAnalysisTest.threeFacesPoly();
 		Random rand = new Random();
-		System.out.println("Das ist der Cube\n" + cube);
 		// Create World and add Model
 		JavaFX3DWorldGroup world = new JavaFX3DWorldGroup();
 
-		for (Face face : cube.getFaces()) {
+		Map<Face, List<MeshView>> faceToMeshes = new HashMap<>();
 
+		// Durch jedes Face des Polyeders iterieren
+		for (Face face : threeFacesPoly.getFaces()) {
+			faceToMeshes.put(face, new ArrayList<>());
+			// Liste erzeugen, die Listen mit Punkten jeder Fläche enthält
+			// Jede innere Liste enthält die Punkte eines Dreiecks
 			List<List<Point>> triangles = Triangulation.triangulateFace(face);
+			// durch die Liste der Dreiecke iterieren
 			for (List<Point> list : triangles) {
 				TriangleMesh triangleMesh = new TriangleMesh();
-				System.out.println(list);
+				// durch die Punkte des Dreiecks iterieren
 				for (Point p : list) {
-					System.out.println(p);
+					// dem triangleMesh die koordinaten der Punkte hinzufügen
 					triangleMesh.getPoints().addAll((float) p.getX(), (float) p.getY(), (float) p.getZ());
-
 				}
+				// dem triangleMesh die Texturkoordinaten und die Dreiecksverbindung hinzufügen
 				triangleMesh.getTexCoords().addAll(0, 0);
 				triangleMesh.getFaces().addAll(0, 0, 1, 0, 2, 0);
 				MeshView meshView = new MeshView(triangleMesh);
 				meshView.setMaterial(
 						new PhongMaterial(Color.color(rand.nextDouble(), rand.nextDouble(), rand.nextDouble())));
-
+				faceToMeshes.get(face).add(meshView);
 				meshView.setScaleX(1);
 				meshView.setScaleY(1);
-				meshView.setOnMouseClicked(e -> meshView.setRotate(meshView.getRotate() + 20));
+				meshView.setOnMouseClicked(e -> {
+					List<MeshView> meshesOfFace = faceToMeshes.get(face);
+					for (MeshView mv : meshesOfFace) {
+						mv.setMaterial(new PhongMaterial(Color.RED));
+					}
+				});
 				world.getChildren().add(meshView);
 			}
 		}
 
-		// Triangulation der einzelnen Flächen des Polyeders
-
-//		List<Point> trianlge = triangles.get(0);
-
-		// Dummy texture coords (required)
-
-		// One triangle
-
-//		TriangleMesh mesh = Triangulation.createTriangleMesh(cube);
-
-//		System.out.println(mesh.getPoints());
-
-		// Create MeshView for the TriangleMesh
-
-		// Set random colors for the triangles
-
-		// Set Scene and start application
 		primaryStage.setScene(world.subScene);
 		primaryStage.setOnCloseRequest(this::goodbye);
 		primaryStage.show();

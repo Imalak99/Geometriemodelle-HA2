@@ -12,6 +12,7 @@ public class HalfEdge {
 
 	private Point org;
 	private HalfEdge prev, next, twin;
+	private Face belongsToFace;
 
 	public HalfEdge(Point org) {
 		this.org = org;
@@ -47,6 +48,14 @@ public class HalfEdge {
 
 	public void setTwin(HalfEdge twin) {
 		this.twin = twin;
+	}
+
+	public Face getBelongsToFace() {
+		return belongsToFace;
+	}
+
+	public void setBelongsToFace(Face belongsToFace) {
+		this.belongsToFace = belongsToFace;
 	}
 
 	public static List<HalfEdge> allHalfEdgesPerFace(HalfEdge start) {
@@ -87,7 +96,9 @@ public class HalfEdge {
 		} else {
 			sb.append(", Twin: null");
 		}
-		return sb.toString();
+		// kürzer String zum schnellen Debuggen
+		return "he: org = " + org;
+//		return sb.toString();
 	}
 
 	public String toStringFullLoop() {

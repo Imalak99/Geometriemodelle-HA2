@@ -30,8 +30,8 @@ public class Face {
 		return holes;
 	}
 
-	public void setHoles(List<HalfEdge> holes) {
-		this.holes = holes;
+	public void setHole(HalfEdge hole) {
+		this.holes.add(hole);
 	}
 
 	public List<Point> getOrderedBoundaryPoints() {
