@@ -18,7 +18,11 @@ public class FaceTest {
 		List<Point> points = new ArrayList<>(Arrays.asList(p0, p1, p2, p3));
 		HalfEdge he0 = HalfEdgeUtil.buildPolygon(points);
 		Face face0 = new Face(he0);
+		Face face1 = new Face(he0);
+		Face face2 = new Face(he0);
 
 		System.out.println(face0);
+		System.out.println(face1);
+		System.out.println(face2);
 	}
 }

@@ -71,6 +71,8 @@ public class JavaFX3DWorldGroup extends Group {
 		scene.setOnMouseDragged(this::handleMouseDragged);
 		scene.setOnScroll(this::handleScroll);
 
+		scene.setOnKeyPressed(event -> handleKeyPress(event));
+
 		return scene;
 	}
 
@@ -108,6 +110,19 @@ public class JavaFX3DWorldGroup extends Group {
 		Cylinder axis = new Cylinder(radius, length);
 		axis.setMaterial(new PhongMaterial(color));
 		return axis;
+	}
+
+	private void handleKeyPress(javafx.scene.input.KeyEvent event) {
+		double moveAmount = 0.3;
+
+		switch (event.getCode()) {
+		case W -> this.setTranslateZ(this.getTranslateZ() + moveAmount); // vorwärts
+		case S -> this.setTranslateZ(this.getTranslateZ() - moveAmount); // rückwärts
+		case A -> this.setTranslateX(this.getTranslateX() - moveAmount); // links
+		case D -> this.setTranslateX(this.getTranslateX() + moveAmount); // rechts
+		default -> {
+		}
+		}
 	}
 
 	/**

@@ -107,6 +107,94 @@ public class Polyhedron {
 		return cube;
 	}
 
+	public static Polyhedron icosahedron() {
+		double t = (1.0 + Math.sqrt(5.0)) / 2.0;
+		double s = 1.0; // optional skalieren
+
+		List<Point> points = Arrays.asList(new Point(-s, t, 0), new Point(s, t, 0), new Point(-s, -t, 0),
+				new Point(s, -t, 0), new Point(0, -s, t), new Point(0, s, t), new Point(0, -s, -t), new Point(0, s, -t),
+				new Point(t, 0, -s), new Point(t, 0, s), new Point(-t, 0, -s), new Point(-t, 0, s));
+
+		int[][] indexFaceList = { { 0, 11, 5 }, { 0, 5, 1 }, { 0, 1, 7 }, { 0, 7, 10 }, { 0, 10, 11 }, { 1, 5, 9 },
+				{ 5, 11, 4 }, { 11, 10, 2 }, { 10, 7, 6 }, { 7, 1, 8 }, { 3, 9, 4 }, { 3, 4, 2 }, { 3, 2, 6 },
+				{ 3, 6, 8 }, { 3, 8, 9 }, { 4, 9, 5 }, { 2, 4, 11 }, { 6, 2, 10 }, { 8, 6, 7 }, { 9, 8, 1 } };
+
+		List<Face> faces = new ArrayList<>();
+		List<HalfEdge> edges = new ArrayList<>();
+
+		for (int[] idx : indexFaceList) {
+			List<Point> facePoints = Arrays.asList(points.get(idx[0]), points.get(idx[1]), points.get(idx[2]));
+			HalfEdge he = HalfEdgeUtil.buildPolygon(facePoints);
+			List<HalfEdge> all = HalfEdge.allHalfEdgesPerFace(he);
+			edges.addAll(all);
+			faces.add(new Face(he));
+		}
+
+		for (int i = 0; i < faces.size(); i++) {
+			for (int j = i + 1; j < faces.size(); j++) {
+				HalfEdgeUtil.connectTwoPolygons(faces.get(i).getOuterHalfEdge(), faces.get(j).getOuterHalfEdge());
+			}
+		}
+
+		Polyhedron icosahedron = new Polyhedron(faces);
+		icosahedron.setPoints(points);
+		icosahedron.setEdges(edges);
+		return icosahedron;
+
+	}
+
+	public static Polyhedron torus() {
+		return torus(24, 12);
+	}
+
+	public static Polyhedron torus(int majorSegs, int minorSegs) {
+		double majorR = 2.0;
+		double minorR = 0.5;
+
+		List<Point> points = new ArrayList<>();
+		for (int i = 0; i < majorSegs; i++) {
+			double theta = 2 * Math.PI * i / majorSegs;
+			for (int j = 0; j < minorSegs; j++) {
+				double phi = 2 * Math.PI * j / minorSegs;
+				double x = (majorR + minorR * Math.cos(phi)) * Math.cos(theta);
+				double y = (majorR + minorR * Math.cos(phi)) * Math.sin(theta);
+				double z = minorR * Math.sin(phi);
+				points.add(new Point(x, y, z));
+			}
+		}
+
+		List<Face> faces = new ArrayList<>();
+		List<HalfEdge> edges = new ArrayList<>();
+
+		for (int i = 0; i < majorSegs; i++) {
+			for (int j = 0; j < minorSegs; j++) {
+				int i2 = (i + 1) % majorSegs;
+				int j2 = (j + 1) % minorSegs;
+
+				int p0 = i * minorSegs + j;
+				int p1 = i2 * minorSegs + j;
+				int p2 = i2 * minorSegs + j2;
+				int p3 = i * minorSegs + j2;
+
+				List<Point> facePoints = Arrays.asList(points.get(p0), points.get(p1), points.get(p2), points.get(p3));
+				HalfEdge he = HalfEdgeUtil.buildPolygon(facePoints);
+				edges.addAll(HalfEdge.allHalfEdgesPerFace(he));
+				faces.add(new Face(he));
+			}
+		}
+
+		for (int i = 0; i < faces.size(); i++) {
+			for (int j = i + 1; j < faces.size(); j++) {
+				HalfEdgeUtil.connectTwoPolygons(faces.get(i).getOuterHalfEdge(), faces.get(j).getOuterHalfEdge());
+			}
+		}
+
+		Polyhedron torus = new Polyhedron(faces);
+		torus.setPoints(points);
+		torus.setEdges(edges);
+		return torus;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

@@ -7,15 +7,33 @@ public class Face {
 
 	private HalfEdge outerHalfEdge;
 	private List<HalfEdge> holes = new ArrayList<HalfEdge>();
+	private static int count = 0; // Zähler für die Anzahl der HalfEdges, die zu dieser Face gehören
+	private int id = 0; // ID der Face, um sie eindeutig zu identifizieren
 //	private List<Point> points;
 
 	public Face(HalfEdge outerHalfEdge, List<HalfEdge> holes) {
 		this.outerHalfEdge = outerHalfEdge;
 		this.holes = holes;
+		assignToFace(outerHalfEdge);
+		for (HalfEdge hole : holes) {
+			assignToFace(hole);
+		}
+		this.id = ++count; // ID wird bei der Erstellung der Face inkrementiert
 	}
 
 	public Face(HalfEdge halfEdge) {
 		this.outerHalfEdge = halfEdge;
+		this.holes = new ArrayList<>();
+		assignToFace(halfEdge);
+		this.id = ++count; // ID wird bei der Erstellung der Face inkrementiert
+	}
+
+	private void assignToFace(HalfEdge start) {
+		HalfEdge current = start;
+		do {
+			current.setBelongsToFace(this);
+			current = current.getNext();
+		} while (current != start);
 	}
 
 	public HalfEdge getOuterHalfEdge() {
@@ -32,6 +50,10 @@ public class Face {
 
 	public void setHole(HalfEdge hole) {
 		this.holes.add(hole);
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public List<Point> getOrderedBoundaryPoints() {
@@ -66,6 +88,8 @@ public class Face {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Face:\n");
+
+		sb.append("  ID: ").append(id).append("\n");
 
 		// Outer boundary
 		if (outerHalfEdge != null) {

@@ -2,7 +2,9 @@ package tests;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
+import logic.NeighborhoodAnalysis;
 import model.Face;
 import model.HalfEdge;
 import model.HalfEdgeUtil;
@@ -14,10 +16,13 @@ public class NeighborhoodAnalysisTest {
 	public static void main(String[] args) {
 		Polyhedron threeFacesPoly = threeFacesPoly();
 		System.out.println(threeFacesPoly);
-		// Hier können weitere Tests oder Ausgaben erfolgen
-		System.out.println("Anzahl der Faces: " + threeFacesPoly.getFaces().size());
-		System.out.println("Anzahl der HalfEdges: " + threeFacesPoly.getEdges().size());
-		System.out.println("Anzahl der Points: " + threeFacesPoly.getPoints().size());
+		Face startFace = threeFacesPoly.getFaces().get(0); // z. B. Face mit ID 0
+		Map<Face, Integer> levels = NeighborhoodAnalysis.bfsFaceLevels(startFace);
+
+		for (Map.Entry<Face, Integer> entry : levels.entrySet()) {
+			System.out.println("Face ID " + entry.getKey().getId() + " → Level " + entry.getValue());
+		}
+
 	}
 
 	public static Polyhedron threeFacesPoly() {
@@ -38,7 +43,7 @@ public class NeighborhoodAnalysisTest {
 		List<Point> pointsF1 = Arrays.asList(p0, p4, p5, p1);
 		List<Point> pointsF2 = Arrays.asList(p1, p5, p6, p2);
 		List<Point> pointsF3 = Arrays.asList(p2, p6, p7, p3);
-		List<Point> pointsF4 = Arrays.asList(p0, p1, p9, p8);
+		List<Point> pointsF4 = Arrays.asList(p8, p0, p1, p9);
 		// Starthalfedge der äußeren und inneren Kanten erzeugen
 		HalfEdge heF1Start = HalfEdgeUtil.buildPolygon(pointsF1);
 		HalfEdge heF2Start = HalfEdgeUtil.buildPolygon(pointsF2);
