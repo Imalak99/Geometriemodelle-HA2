@@ -205,7 +205,6 @@ public class Polyhedron {
 	}
 
 	public static Polyhedron cuboidGenus2() {
-		// Punkte definieren (siehe deine Liste oben)
 		Point p0 = new Point(0, 0, 0);
 		Point p1 = new Point(5, 0, 0);
 		Point p2 = new Point(5, 3, 0);
@@ -263,30 +262,105 @@ public class Polyhedron {
 			edges.addAll(HalfEdge.allHalfEdgesPerFace(h));
 		faces.add(backFace);
 
-		// Boden, Decke, Seiten
-		faces.add(new Face(HalfEdgeUtil.buildPolygon(Arrays.asList(p0, p1, p5, p4)))); // unten
-		faces.add(new Face(HalfEdgeUtil.buildPolygon(Arrays.asList(p3, p7, p6, p2)))); // oben
-		faces.add(new Face(HalfEdgeUtil.buildPolygon(Arrays.asList(p0, p4, p7, p3)))); // links
-		faces.add(new Face(HalfEdgeUtil.buildPolygon(Arrays.asList(p1, p2, p6, p5)))); // rechts
+		// Boden
+		HalfEdge heBottom = HalfEdgeUtil.buildPolygon(Arrays.asList(p0, p1, p5, p4));
+		edges.addAll(HalfEdge.allHalfEdgesPerFace(heBottom));
+		faces.add(new Face(heBottom));
+
+		// Decke
+		HalfEdge heTop = HalfEdgeUtil.buildPolygon(Arrays.asList(p3, p7, p6, p2));
+		edges.addAll(HalfEdge.allHalfEdgesPerFace(heTop));
+		faces.add(new Face(heTop));
+
+		// Linke Seite
+		HalfEdge heLeft = HalfEdgeUtil.buildPolygon(Arrays.asList(p0, p4, p7, p3));
+		edges.addAll(HalfEdge.allHalfEdgesPerFace(heLeft));
+		faces.add(new Face(heLeft));
+
+		// Rechte Seite
+		HalfEdge heRight = HalfEdgeUtil.buildPolygon(Arrays.asList(p1, p2, p6, p5));
+		edges.addAll(HalfEdge.allHalfEdgesPerFace(heRight));
+		faces.add(new Face(heRight));
 
 		// Tunnelwände Loch 1
-		faces.add(new Face(HalfEdgeUtil.buildPolygon(Arrays.asList(p8, p12, p13, p9))));
-		faces.add(new Face(HalfEdgeUtil.buildPolygon(Arrays.asList(p9, p13, p14, p10))));
-		faces.add(new Face(HalfEdgeUtil.buildPolygon(Arrays.asList(p10, p14, p15, p11))));
-		faces.add(new Face(HalfEdgeUtil.buildPolygon(Arrays.asList(p11, p15, p12, p8))));
+		HalfEdge heT1a = HalfEdgeUtil.buildPolygon(Arrays.asList(p8, p12, p13, p9));
+		edges.addAll(HalfEdge.allHalfEdgesPerFace(heT1a));
+		faces.add(new Face(heT1a));
+
+		HalfEdge heT1b = HalfEdgeUtil.buildPolygon(Arrays.asList(p9, p13, p14, p10));
+		edges.addAll(HalfEdge.allHalfEdgesPerFace(heT1b));
+		faces.add(new Face(heT1b));
+
+		HalfEdge heT1c = HalfEdgeUtil.buildPolygon(Arrays.asList(p10, p14, p15, p11));
+		edges.addAll(HalfEdge.allHalfEdgesPerFace(heT1c));
+		faces.add(new Face(heT1c));
+
+		HalfEdge heT1d = HalfEdgeUtil.buildPolygon(Arrays.asList(p11, p15, p12, p8));
+		edges.addAll(HalfEdge.allHalfEdgesPerFace(heT1d));
+		faces.add(new Face(heT1d));
 
 		// Tunnelwände Loch 2
-		faces.add(new Face(HalfEdgeUtil.buildPolygon(Arrays.asList(p16, p20, p21, p17))));
-		faces.add(new Face(HalfEdgeUtil.buildPolygon(Arrays.asList(p17, p21, p22, p18))));
-		faces.add(new Face(HalfEdgeUtil.buildPolygon(Arrays.asList(p18, p22, p23, p19))));
-		faces.add(new Face(HalfEdgeUtil.buildPolygon(Arrays.asList(p19, p23, p20, p16))));
+		HalfEdge heT2a = HalfEdgeUtil.buildPolygon(Arrays.asList(p16, p20, p21, p17));
+		edges.addAll(HalfEdge.allHalfEdgesPerFace(heT2a));
+		faces.add(new Face(heT2a));
+
+		HalfEdge heT2b = HalfEdgeUtil.buildPolygon(Arrays.asList(p17, p21, p22, p18));
+		edges.addAll(HalfEdge.allHalfEdgesPerFace(heT2b));
+		faces.add(new Face(heT2b));
+
+		HalfEdge heT2c = HalfEdgeUtil.buildPolygon(Arrays.asList(p18, p22, p23, p19));
+		edges.addAll(HalfEdge.allHalfEdgesPerFace(heT2c));
+		faces.add(new Face(heT2c));
+
+		HalfEdge heT2d = HalfEdgeUtil.buildPolygon(Arrays.asList(p19, p23, p20, p16));
+		edges.addAll(HalfEdge.allHalfEdgesPerFace(heT2d));
+		faces.add(new Face(heT2d));
 
 		// Twins verbinden
 		for (int i = 0; i < faces.size(); i++) {
 			for (int j = i + 1; j < faces.size(); j++) {
-				HalfEdgeUtil.connectTwoPolygons(faces.get(i).getOuterHalfEdge(), faces.get(j).getOuterHalfEdge());
+
+				Face f1 = faces.get(i);
+				Face f2 = faces.get(j);
+
+				HalfEdgeUtil.connectTwoPolygons(f1.getOuterHalfEdge(), f2.getOuterHalfEdge());
+				for (HalfEdge h1 : f1.getHoles()) {
+
+					for (HalfEdge h2 : f2.getHoles()) {
+						System.out.println("\n");
+						System.out.println("Face " + f1.getId() + " und Face " + f2.getId());
+						System.out.println("\nh1: \n" + h1);
+						System.out.println("\nh2: \n" + h2);
+						System.out.println("\n");
+						HalfEdgeUtil.connectTwoPolygons(h1, h2);
+					}
+					HalfEdgeUtil.connectTwoPolygons(h1, f2.getOuterHalfEdge());
+				}
+				for (HalfEdge h2 : f2.getHoles()) {
+					HalfEdgeUtil.connectTwoPolygons(h2, f1.getOuterHalfEdge());
+				}
 			}
 		}
+
+//		for (int i = 0; i < faces.size(); i++) {
+//			Face faceA = faces.get(i);
+//			List<HalfEdge> loopsA = new ArrayList<>();
+//			loopsA.add(faceA.getOuterHalfEdge());
+//			loopsA.addAll(faceA.getHoles());
+//
+//			for (int j = i + 1; j < faces.size(); j++) {
+//				Face faceB = faces.get(j);
+//				List<HalfEdge> loopsB = new ArrayList<>();
+//				loopsB.add(faceB.getOuterHalfEdge());
+//				loopsB.addAll(faceB.getHoles());
+//
+//				for (HalfEdge loopA : loopsA) {
+//					for (HalfEdge loopB : loopsB) {
+//						HalfEdgeUtil.connectTwoPolygons(loopA, loopB);
+//					}
+//				}
+//			}
+//		}
 
 		Polyhedron block = new Polyhedron(faces);
 		block.setPoints(points);

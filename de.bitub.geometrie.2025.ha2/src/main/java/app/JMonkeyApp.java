@@ -14,7 +14,8 @@ public class JMonkeyApp extends SimpleApplication {
 	static final float[] P = { 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0 };
 
 	// Triangle Faces: [0,1,2,3] -> [0,1,2][2,3,0]
-	static final int[] F = { 0, 1, 2, 2, 3, 0 };
+//	static final int[] F = { 0, 1, 2, 2, 3, 0 };
+	static final int[] F = { 0, 1, 2 };
 
 	public static void main(String[] args) {
 		new JMonkeyApp().start();
