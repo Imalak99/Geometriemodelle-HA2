@@ -32,13 +32,13 @@ public class NeighborhoodAnalysisTest {
 		Point p5 = new Point(2, 1, 0);
 		Point p6 = new Point(2, 2, 0);
 		Point p7 = new Point(1, 2, 0);
+
+		// Zusätzliche Punkte für eine weitere Face
 		Point p8 = new Point(1, 2, -3);
 		Point p9 = new Point(1, 1, -3);
-		Point p10 = new Point(3, 3, -3);
-		Point p11 = new Point(3, 0, -3);
 
 		// Liste aller Punkte
-		List<Point> points = new ArrayList<>(Arrays.asList(p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11));
+		List<Point> points = new ArrayList<>(Arrays.asList(p0, p1, p2, p3, p4, p5, p6, p7, p8, p9));
 
 		// leere Facelist erstellen
 		List<Face> faces = new ArrayList<>();
@@ -46,12 +46,11 @@ public class NeighborhoodAnalysisTest {
 		List<HalfEdge> edges = new ArrayList<>();
 
 		// Starthalfedges der Flächen
-		HalfEdge heF1 = HalfEdgeUtil.buildPolygon(Arrays.asList(p0, p3, p2, p1)); // Außenkontur (Counterclockwise)
+		HalfEdge heF1 = HalfEdgeUtil.buildPolygon(Arrays.asList(p0, p1, p2, p3)); // Außenkontur (Counterclockwise)
 		HalfEdge heF1hole = HalfEdgeUtil.buildPolygon(Arrays.asList(p4, p7, p6, p5)); // Innenkontur (Loch) (Clockwise)
 		List<HalfEdge> holes = new ArrayList<>();
 		holes.add(heF1hole); // Lochkante hinzufügen
 		HalfEdge heF2 = HalfEdgeUtil.buildPolygon(Arrays.asList(p7, p4, p9, p8));
-//		HalfEdge heF3 = HalfEdgeUtil.buildPolygon(Arrays.asList(p1, p2, p10, p11));
 
 		// Alles HalfEdges sammeln und der Edge-Liste hinzufügen
 		edges.addAll(HalfEdge.allHalfEdgesPerFace(heF1));
@@ -90,9 +89,11 @@ public class NeighborhoodAnalysisTest {
 		Polyhedron faceWithHoleAnAdditionalFace = new Polyhedron(faces);
 		faceWithHoleAnAdditionalFace.setEdges(edges);
 		faceWithHoleAnAdditionalFace.setPoints(points);
-
-		System.out.println("Anzahl der HalfEdges: " + edges.size());
-		System.out.println("Alle Edges: \n" + edges);
+		Face face_1 = faceWithHoleAnAdditionalFace.getFaces().get(0);
+		System.out.println("Außenkanten der Fläche1: " + face_1.getOuterHalfEdge().toStringFullLoop());
+		System.out.println("Innenkante der Fläche1: " + face_1.getHoles().get(0).toStringFullLoop());
+		Face face_2 = faceWithHoleAnAdditionalFace.getFaces().get(0);
+		System.out.println("Außenkanten der Fläche2: " + face_2.getOuterHalfEdge().toStringFullLoop());
 		return faceWithHoleAnAdditionalFace;
 
 	}

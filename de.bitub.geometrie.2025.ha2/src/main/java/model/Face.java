@@ -7,6 +7,7 @@ public class Face {
 
 	private HalfEdge outerHalfEdge;
 	private List<HalfEdge> holes = new ArrayList<HalfEdge>();
+	private Polyhedron belongsToPolyhedron;
 	private static int count = 0; // Zähler für die Anzahl der HalfEdges, die zu dieser Face gehören
 	private int id = 0; // ID der Face, um sie eindeutig zu identifizieren
 //	private List<Point> points;
@@ -84,6 +85,14 @@ public class Face {
 		return points;
 	}
 
+	public Polyhedron getBelongsToPolyhedron() {
+		return belongsToPolyhedron;
+	}
+
+	public void setBelongsToPolyhedron(Polyhedron belongsToPolyhedron) {
+		this.belongsToPolyhedron = belongsToPolyhedron;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -107,6 +116,12 @@ public class Face {
 				sb.append("\n");
 				i++;
 			}
+		}
+
+		if (belongsToPolyhedron != null) {
+			sb.append("  Belongs to Polyhedron: ").append(belongsToPolyhedron.getName()).append("\n");
+		} else {
+			sb.append("  Belongs to Polyhedron: null\n");
 		}
 
 		return sb.toString();

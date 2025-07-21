@@ -106,7 +106,7 @@ public class HalfEdge {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("he: org = ").append(org.getX()).append("  ").append(org.getY()).append("  ").append(org.getZ())
-				.append("\n");
+				.append("    ");
 
 		if (twin != null && twin.getOrg() != null) {
 			sb.append("twin = ").append(twin.getOrg().getX()).append("  ").append(twin.getOrg().getY()).append("  ")

@@ -6,12 +6,22 @@ import java.util.Map;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
+import logic.EulerOperations;
 import logic.NeighborhoodAnalysis;
 import model.Face;
+import model.Polyhedron;
 
 public class NeighborhoodHandler {
 
 	public static void colorNeighborhood(Face startFace, Map<Face, List<MeshView>> faceToMeshes) {
+		// Diese ganze EulerPoincare Logic kann noch ausgelagert werden, sodass es einen
+		// allgemienen handler gibt, der BSF und Euler macht
+		System.out.println("Method colorNeighborhood aufgerufen");
+		System.out.println("Es handelt sich dem dem Poyeder: " + startFace.getBelongsToPolyhedron().getName());
+
+		Polyhedron polyhedron = startFace.getBelongsToPolyhedron();
+		EulerOperations.calcEulerPoincareCharacteristic(polyhedron);
+
 		Map<Face, Integer> levels = NeighborhoodAnalysis.bfsFaceLevels(startFace);
 
 		int maxLevel = levels.values().stream().max(Integer::compareTo).orElse(1);
