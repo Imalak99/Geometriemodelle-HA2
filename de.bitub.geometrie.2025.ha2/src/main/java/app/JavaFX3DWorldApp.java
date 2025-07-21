@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import fx3D.JavaFX3DWorldGroup;
-import fx3D.MeshFactory;
+import fx3D.JavaFXMeshFactory;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -36,18 +36,18 @@ public class JavaFX3DWorldApp extends Application {
 		Polyhedron multiPointsFace = TriangulationTest.multiPointsFace();
 		Polyhedron threeFacesPoly = NeighborhoodAnalysisTest.threeFacesPoly();
 		Polyhedron cuboidGenus2 = Polyhedron.cuboidGenus2();
-//		Polyhedron faceWithHoleAnAdditionalFace = NeighborhoodAnalysisTest.faceWithHoleAnAdditionalFace();
+		Polyhedron faceWithHoleAnAdditionalFace = NeighborhoodAnalysisTest.faceWithHoleAnAdditionalFace();
 
 //		System.out.println("Anzahl Faces: " + cuboidGenus2.getFaces().size());
 //		System.out.println("Anzahl Points: " + cuboidGenus2.getPoints().size());
 //		System.out.println("anzahl HalfEdges: " + cuboidGenus2.getEdges().size());
 
 		// Zum debuggen hier weiter machen!!
-//		List<Face> facelist = cuboidGenus2.getFaces();
-//		for (Face f : facelist) {
-//			System.out.println("outer he " + f.getId() + "\n" + f.getOuterHalfEdge());
-//			System.out.println("inner he " + f.getId() + "\n" + f.getHoles());
-//		}
+		List<Face> facelist = cuboidGenus2.getFaces();
+		for (Face f : facelist) {
+			System.out.println("outer he " + f.getId() + "\n" + f.getOuterHalfEdge());
+			System.out.println("inner he " + f.getId() + "\n" + f.getHoles());
+		}
 
 		Polyhedron icosahedron1 = Polyhedron.icosahedron();
 		Polyhedron torus = Polyhedron.torus();
@@ -55,8 +55,9 @@ public class JavaFX3DWorldApp extends Application {
 		Polyhedron cubeNonWaterTight = Polyhedron.cubeNonWaterTight();
 
 		// Liste mit allen Polyedern
-		List<Polyhedron> polyhedra = List.of(icosahedron1, torus, torus2, cube, facWithHole, triangleFace,
-				multiPointsFace, threeFacesPoly, cuboidGenus2, cubeNonWaterTight);
+//		List<Polyhedron> polyhedra = List.of(icosahedron1, torus, torus2, cube, facWithHole, triangleFace,
+//				multiPointsFace, threeFacesPoly, cuboidGenus2, cubeNonWaterTight);
+		List<Polyhedron> polyhedra = List.of(triangleFace);
 
 		// Create World and add Model
 		JavaFX3DWorldGroup world = new JavaFX3DWorldGroup();
@@ -64,7 +65,7 @@ public class JavaFX3DWorldApp extends Application {
 		Map<MeshView, Face> meshToFace = new HashMap<>();
 		Map<Face, List<MeshView>> faceToMeshes = new HashMap<>();
 
-		MeshFactory.createMeshViews(polyhedra, faceToMeshes, meshToFace, world);
+		JavaFXMeshFactory.createMeshViews(polyhedra, faceToMeshes, meshToFace, world);
 
 		primaryStage.setScene(world.subScene);
 //		primaryStage.setOnCloseRequest(this::goodbye);

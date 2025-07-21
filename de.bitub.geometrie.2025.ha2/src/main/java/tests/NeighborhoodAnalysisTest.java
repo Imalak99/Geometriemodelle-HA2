@@ -67,20 +67,21 @@ public class NeighborhoodAnalysisTest {
 
 		// Fuer jede HalfEdge den Twin setzen
 		for (int i = 0; i < faces.size(); i++) {
+			Face faceA = faces.get(i);
+			List<HalfEdge> loopsA = new ArrayList<>();
+			loopsA.add(faceA.getOuterHalfEdge());
+			loopsA.addAll(faceA.getHoles());
+
 			for (int j = i + 1; j < faces.size(); j++) {
-				Face f1 = faces.get(i);
-				Face f2 = faces.get(j);
+				Face faceB = faces.get(j);
+				List<HalfEdge> loopsB = new ArrayList<>();
+				loopsB.add(faceB.getOuterHalfEdge());
+				loopsB.addAll(faceB.getHoles());
 
-				HalfEdgeUtil.connectTwoPolygons(f1.getOuterHalfEdge(), f2.getOuterHalfEdge());
-
-				for (HalfEdge h1 : f1.getHoles()) {
-					HalfEdgeUtil.connectTwoPolygons(h1, f2.getOuterHalfEdge());
-					for (HalfEdge h2 : f2.getHoles()) {
-						HalfEdgeUtil.connectTwoPolygons(h1, h2);
+				for (HalfEdge loopA : loopsA) {
+					for (HalfEdge loopB : loopsB) {
+						HalfEdgeUtil.connectTwoPolygons(loopA, loopB);
 					}
-				}
-				for (HalfEdge h2 : f2.getHoles()) {
-					HalfEdgeUtil.connectTwoPolygons(h2, f1.getOuterHalfEdge());
 				}
 			}
 		}

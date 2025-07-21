@@ -17,7 +17,7 @@ import model.Face;
 import model.Point;
 import model.Polyhedron;
 
-public class MeshFactory {
+public class JavaFXMeshFactory {
 
 	public static void createMeshViews(Polyhedron polyhedron, Map<Face, List<MeshView>> faceToMeshes,
 			Map<MeshView, Face> meshToFace, Group world) {
