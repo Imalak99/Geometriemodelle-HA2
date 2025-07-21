@@ -17,9 +17,9 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 
 import jme3D.JmeMeshFactory;
+import jme3D.NeighborhoodHandlerJME;
 import model.Face;
 import model.Polyhedron;
-import tests.TriangulationTest;
 
 public class JMonkeyApp extends SimpleApplication {
 
@@ -33,16 +33,18 @@ public class JMonkeyApp extends SimpleApplication {
 	@Override
 	public void simpleInitApp() {
 		// Beispiel-Polyeder laden
-		Polyhedron polyhedron = TriangulationTest.triangleFace();
-		Polyhedron cube = Polyhedron.cube();
 		Polyhedron torus = Polyhedron.torus();
+		Polyhedron cube = Polyhedron.cube();
+		Polyhedron icosahedron1 = Polyhedron.icosahedron();
+		Polyhedron torus2 = Polyhedron.torus(48, 24);
+		Polyhedron cubeNonWaterTight = Polyhedron.cubeNonWaterTight();
 
 		// Material-Vorlage erstellen
 		Material materialTemplate = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 		materialTemplate.setColor("Color", ColorRGBA.LightGray);
 
 		// Darstellung erzeugen
-		JmeMeshFactory.createGeometries(torus, faceToGeometries, geometryToFace, rootNode, materialTemplate);
+		JmeMeshFactory.createGeometries(torus2, faceToGeometries, geometryToFace, rootNode, materialTemplate);
 
 		// UI & Kamera Einstellungen
 		this.setShowSettings(false);
@@ -55,7 +57,6 @@ public class JMonkeyApp extends SimpleApplication {
 		inputManager.addListener(clickListener, "Pick");
 	}
 
-	// Picking-Handler (noch auskommentiert)
 	private final ActionListener clickListener = new ActionListener() {
 		@Override
 		public void onAction(String name, boolean isPressed, float tpf) {
@@ -66,32 +67,20 @@ public class JMonkeyApp extends SimpleApplication {
 	};
 
 	private void pickFace() {
-		System.out.println("pickFace() called");
-
-		// TODO: Picking-Logik hier einfügen
 		Vector2f click2d = inputManager.getCursorPosition();
-		Vector3f click3d = cam.getWorldCoordinates(click2d, 0f).clone();
-		Vector3f dir = cam.getWorldCoordinates(click2d, 1f).subtractLocal(click3d).normalizeLocal();
+		Vector3f origin = cam.getWorldCoordinates(click2d, 0f).clone();
+		Vector3f direction = cam.getWorldCoordinates(click2d, 1f).subtractLocal(origin).normalizeLocal();
+		Ray ray = new Ray(origin, direction);
 
-		Ray ray = new Ray(click3d, dir);
 		CollisionResults results = new CollisionResults();
 		rootNode.collideWith(ray, results);
 
 		if (results.size() > 0) {
-			Geometry closest = results.getClosestCollision().getGeometry();
-			Face clickedFace = geometryToFace.get(closest);
-			System.out.println("Face clicked: " + clickedFace);
-
-			highlightFaceGeometries(clickedFace);
-		}
-	}
-
-	// Optional: später zum Färben verwendbar
-	private void highlightFaceGeometries(Face face) {
-		List<Geometry> geometries = faceToGeometries.get(face);
-		if (geometries != null) {
-			for (Geometry g : geometries) {
-				g.getMaterial().setColor("Color", ColorRGBA.Red);
+			Geometry clickedGeometry = results.getClosestCollision().getGeometry();
+			Face clickedFace = geometryToFace.get(clickedGeometry);
+			if (clickedFace != null) {
+				System.out.println("Clicked Face: " + clickedFace);
+				NeighborhoodHandlerJME.colorNeighborhood(clickedFace, faceToGeometries);
 			}
 		}
 	}
