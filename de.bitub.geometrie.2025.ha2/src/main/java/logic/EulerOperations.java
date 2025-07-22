@@ -28,17 +28,27 @@ public class EulerOperations {
 		int f = calcF(polyhedron);
 		int l = calcL(polyhedron);
 		int s = calcS(polyhedron);
-		int g = calcG(s, v, e, f, l);
 
-		int result = v - e + f - (l - f) - 2 * (s - g);
+		// Klassische Euler-Charakteristik (z. B. χ = 2 für Kugel, 0 für Torus)
+		int chiClassic = v - e + f - (l - f);
+
+		// Genus berechnen basierend auf klassischem χ
+		int g = calcG(chiClassic, s);
+
+		// Angepasster χ-Wert zur Validierung (sollte 0 sein bei watertight Struktur)
+		int chiAdjusted = chiClassic - 2 * (s - g);
+
+		boolean watertight = isWatertight(polyhedron);
+
 		String resultString = String.format(
-				"χ = V - E + F - (L - F) - 2 * (S - G)\nχ = %d - %d + %d - (%d - %d) - 2 * (%d - %d)\nχ = %d", v, e, f,
-				l, f, s, g, result);
+				"χ (klassisch)  = V - E + F - (L - F)\nχ = %d - %d + %d - (%d - %d) = %d\n" + "G (Genus)       = %d\n"
+						+ "χ (angepasst)   = χ - 2 * (S - G) = %d - 2 * (%d - %d) = %d\n" + "Watertight:     %s",
+				v, e, f, l, f, chiClassic, g, chiClassic, s, g, chiAdjusted, watertight ? "✔" : "✘");
 
 		polyhedron.setEulerPoinCareString(resultString);
-		polyhedron.setEulerPoinCare(result);
+		polyhedron.setEulerPoinCare(chiAdjusted);
 
-		return result;
+		return chiAdjusted;
 	}
 
 	/**
@@ -110,17 +120,8 @@ public class EulerOperations {
 		return s;
 	}
 
-	/**
-	 * Berechnet den Genus des Polyeders, also die Anzahl der "Henkel" bzw. Tunnel.
-	 * Formel: g = S - ½ · (V − E + F − (L − F))
-	 *
-	 * @param polyhedron das zu analysierende Polyeder
-	 * @return der Genus des Polyeders
-	 */
-	private static int calcG(int s, int v, int e, int f, int l) {
-
-		int g = s - (v - e + f - (l - f)) / 2;
-//		System.out.println("G (Genus): " + g);
+	private static int calcG(int chi, int s) {
+		int g = s - chi / 2;
 		return g;
 	}
 
@@ -151,4 +152,26 @@ public class EulerOperations {
 
 		return uniqueEdges;
 	}
+
+	public static boolean isWatertight(Polyhedron polyhedron) {
+		List<HalfEdge> edges = polyhedron.getEdges();
+		Set<HalfEdge> visited = new HashSet<>();
+
+		for (HalfEdge edge : edges) {
+			if (visited.contains(edge))
+				continue;
+
+			HalfEdge twin = edge.getTwin();
+			if (twin == null || twin.getTwin() != edge) {
+				return false;
+			}
+
+			// beide markieren, damit sie nicht doppelt geprüft werden
+			visited.add(edge);
+			visited.add(twin);
+		}
+
+		return true;
+	}
+
 }

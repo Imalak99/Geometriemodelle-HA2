@@ -7,12 +7,20 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 
+import logic.EulerOperations;
 import logic.NeighborhoodAnalysis;
 import model.Face;
+import model.Polyhedron;
 
 public class NeighborhoodHandlerJME {
 
 	public static void colorNeighborhood(Face startFace, Map<Face, List<Geometry>> faceToGeometries) {
+		Polyhedron polyhedron = startFace.getBelongsToPolyhedron();
+		EulerOperations.calcEulerPoincareCharacteristic(polyhedron);
+		System.out.println(polyhedron.getName());
+		System.out.println(polyhedron.getEulerPoinCareString());
+		System.out.println("\n");
+
 		Map<Face, Integer> levels = NeighborhoodAnalysis.bfsFaceLevels(startFace);
 		int maxLevel = levels.values().stream().max(Integer::compareTo).orElse(1);
 

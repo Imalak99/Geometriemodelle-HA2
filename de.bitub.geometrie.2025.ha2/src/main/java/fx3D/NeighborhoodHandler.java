@@ -13,7 +13,7 @@ import model.Polyhedron;
 
 public class NeighborhoodHandler {
 
-	public static void colorNeighborhood(Face startFace, Map<Face, List<MeshView>> faceToMeshes) {
+	public static void handler(Face startFace, Map<Face, List<MeshView>> faceToMeshes) {
 		// Diese ganze EulerPoincare Logic kann noch ausgelagert werden, sodass es einen
 		// allgemienen handler gibt, der BSF und Euler macht
 

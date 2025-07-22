@@ -33,10 +33,8 @@ public class JMonkeyApp extends SimpleApplication {
 	@Override
 	public void simpleInitApp() {
 		// Beispiel-Polyeder laden
-		Polyhedron torus = Polyhedron.torus();
-		Polyhedron cube = Polyhedron.cube();
-		Polyhedron icosahedron1 = Polyhedron.icosahedron();
-		Polyhedron torus2 = Polyhedron.torus(48, 24);
+		Polyhedron icosahedron = Polyhedron.icosahedron();
+		Polyhedron torus = Polyhedron.torus(48, 24);
 		Polyhedron cubeNonWaterTight = Polyhedron.cubeNonWaterTight();
 
 		// Material-Vorlage erstellen
@@ -44,7 +42,8 @@ public class JMonkeyApp extends SimpleApplication {
 		materialTemplate.setColor("Color", ColorRGBA.LightGray);
 
 		// Darstellung erzeugen
-		JmeMeshFactory.createGeometries(torus2, faceToGeometries, geometryToFace, rootNode, materialTemplate);
+		JmeMeshFactory.createGeometries(cubeNonWaterTight, faceToGeometries, geometryToFace, rootNode,
+				materialTemplate);
 
 		// UI & Kamera Einstellungen
 		this.setShowSettings(false);
@@ -79,7 +78,6 @@ public class JMonkeyApp extends SimpleApplication {
 			Geometry clickedGeometry = results.getClosestCollision().getGeometry();
 			Face clickedFace = geometryToFace.get(clickedGeometry);
 			if (clickedFace != null) {
-				System.out.println("Clicked Face: " + clickedFace);
 				NeighborhoodHandlerJME.colorNeighborhood(clickedFace, faceToGeometries);
 			}
 		}
