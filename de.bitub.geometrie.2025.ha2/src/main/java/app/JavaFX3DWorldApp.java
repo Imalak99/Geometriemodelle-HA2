@@ -36,6 +36,8 @@ public class JavaFX3DWorldApp extends Application {
 
 //		Polyhedron faceWithHoleAnAdditionalFace = NeighborhoodAnalysisTest.faceWithHoleAnAdditionalFace();
 
+//		Polyhedron cubeWithHole = EulerTest.cubeWithHole();
+
 		Polyhedron icosahedron = Polyhedron.icosahedron();
 		Polyhedron cubeNonWaterTight = Polyhedron.cubeNonWaterTight();
 		Polyhedron torus = Polyhedron.torus(48, 24);

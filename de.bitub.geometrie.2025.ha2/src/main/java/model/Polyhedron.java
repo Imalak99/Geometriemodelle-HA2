@@ -10,6 +10,8 @@ public class Polyhedron {
 	private List<HalfEdge> edges;
 	private List<Point> points;
 	private String name;
+	private String eulerPoinCareString;
+	private int eulerPoinCare;
 
 	/**
 	 * Konstruktor für Polyhedron, der die Listen von Faces, HalfEdges und Vertices
@@ -64,6 +66,28 @@ public class Polyhedron {
 
 	public String getName() {
 		return name;
+	}
+
+	public String getEulerPoinCareString() {
+		return eulerPoinCareString;
+	}
+
+	public void setEulerPoinCareString(String eulerPoinCareString) {
+		if (eulerPoinCareString == null || eulerPoinCareString.isEmpty()) {
+			throw new IllegalArgumentException("Euler Poincare String is null or empty");
+		}
+		this.eulerPoinCareString = eulerPoinCareString;
+	}
+
+	public int getEulerPoinCare() {
+		if (eulerPoinCareString == null || eulerPoinCareString.isEmpty()) {
+			throw new IllegalStateException("Euler Poincare is not set");
+		}
+		return eulerPoinCare;
+	}
+
+	public void setEulerPoinCare(int eulerPoinCare) {
+		this.eulerPoinCare = eulerPoinCare;
 	}
 
 	public static Polyhedron cube() {
