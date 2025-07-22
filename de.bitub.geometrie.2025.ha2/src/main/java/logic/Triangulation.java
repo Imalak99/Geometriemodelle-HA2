@@ -22,16 +22,6 @@ public class Triangulation {
 	 * @param face
 	 * @return Liste der Dreiecke
 	 */
-//	public static List<List<Point>> triangulateFace(Face face) {
-//		List<List<Point>> result = new ArrayList<>();
-//		List<Point> firstTriangle = new ArrayList<Point>();
-//		firstTriangle.addAll(Arrays.asList(new Point(0, 0, 0), new Point(1, 0, 0), new Point(1, 1, 0)));
-//
-//		result.add(firstTriangle);
-//
-//		return result;
-//	}
-
 	public static List<List<Point>> triangulateFace(Face face) {
 		// Schritt 1: 3D-Ränder sammeln
 		List<List<Point>> boundaries3d = new ArrayList<>();

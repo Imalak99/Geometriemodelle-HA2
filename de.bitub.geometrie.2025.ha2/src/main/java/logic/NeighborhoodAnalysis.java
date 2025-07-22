@@ -65,18 +65,4 @@ public class NeighborhoodAnalysis {
 		return neighbors;
 	}
 
-//	public static List<Face> getNeighborFaces(Face face) {
-//		List<Face> neighbors = new ArrayList<>();
-//		HalfEdge start = face.getOuterHalfEdge();
-//		HalfEdge current = start;
-//		do {
-//			HalfEdge twin = current.getTwin();
-//			if (twin != null && twin.getBelongsToFace() != null && twin.getBelongsToFace() != face) {
-//				neighbors.add(twin.getBelongsToFace());
-//			}
-//			current = current.getNext();
-//		} while (current != start);
-//		return neighbors;
-//	}
-
 }
