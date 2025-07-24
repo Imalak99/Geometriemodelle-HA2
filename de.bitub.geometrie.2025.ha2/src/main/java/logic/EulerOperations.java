@@ -132,7 +132,7 @@ public class EulerOperations {
 	 * @param edges Liste aller HalfEdges im Polyeder
 	 * @return Liste eindeutiger HalfEdges (Euler-Kanten)
 	 */
-	public static List<HalfEdge> eulerEdges(List<HalfEdge> edges) {
+	private static List<HalfEdge> eulerEdges(List<HalfEdge> edges) {
 		Set<HalfEdge> visited = new HashSet<>();
 		List<HalfEdge> uniqueEdges = new ArrayList<>();
 
