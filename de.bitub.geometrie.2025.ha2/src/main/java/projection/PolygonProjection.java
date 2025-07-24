@@ -235,32 +235,26 @@ public class PolygonProjection {
 		points3D.add(new Point(10, 10, 0));
 		points3D.add(new Point(10, 10, 5));
 		points3D.add(new Point(0, 10, 5));
-
 		// Create hole
 		List<Point> hole = new ArrayList<>();
 		hole.add(new Point(1, 10, 1));
 		hole.add(new Point(8, 10, 1));
 		hole.add(new Point(8, 10, 4));
 		hole.add(new Point(1, 10, 4));
-
 		// Reverse hole points (important for Poly2Tri - holes must be in reverse order)
 		// Using List.reversed() method available in Java 21
 		List<Point> reversedHole = hole.reversed();
-
 		// Project the 3D polygons to 2D
 		List<List<PolygonPoint>> points2D = new ArrayList<>();
 		Map<PolygonPoint, Point> pointMap = projectTo2D(List.of(points3D, reversedHole), points2D);
-
 		// Create the polygon with holes
 		Polygon polygon = new Polygon(points2D.get(0));
 
 		for (int i = 1; i < points2D.size(); i++) {
 			polygon.addHole(new Polygon(points2D.get(i)));
 		}
-
 		// Triangulate the polygon
 		Poly2Tri.triangulate(polygon);
-
 		// Print the triangulation results
 		System.out.println("Triangulation Results:");
 		for (DelaunayTriangle tri : polygon.getTriangles()) {
