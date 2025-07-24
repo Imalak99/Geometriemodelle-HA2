@@ -26,24 +26,20 @@ public class Triangulation {
 		// Schritt 1: 3D-Ränder sammeln
 		List<List<Point>> boundaries3d = new ArrayList<>();
 		boundaries3d.add(face.getOrderedBoundaryPoints());
-
 		for (HalfEdge holeStart : face.getHoles()) {
 			if (holeStart == null)
 				continue;
 			boundaries3d.add(Face.getPointsFromStartHalfEdge(holeStart));
 		}
-
 		// Schritt 2: Projektion in 2D
 		List<List<PolygonPoint>> points2D = new ArrayList<>();
 		Map<PolygonPoint, Point> pointMap = PolygonProjection.projectTo2D(boundaries3d, points2D);
-
 		// Schritt 3: Poly2Tri
 		Polygon polygon2d = new Polygon(points2D.get(0));
 		for (int i = 1; i < points2D.size(); i++) {
 			polygon2d.addHole(new Polygon(points2D.get(i)));
 		}
 		Poly2Tri.triangulate(polygon2d);
-
 		// Schritt 4: Rückabbildung der Dreiecke in 3D
 		List<List<Point>> triangles3D = new ArrayList<>();
 		for (DelaunayTriangle triangle2D : polygon2d.getTriangles()) {
@@ -53,7 +49,6 @@ public class Triangulation {
 			}
 			triangles3D.add(triangle3D);
 		}
-//		System.out.println(triangles3D);
 		return triangles3D;
 	}
 

@@ -14,7 +14,16 @@ import model.Face;
 import model.HalfEdge;
 
 public class NeighborhoodAnalysis {
-
+	/**
+	 * Führt eine Breitensuche (BFS) auf den Flächen eines Polyeders durch,
+	 * beginnend bei der übergebenen Startfläche. Dabei wird für jede erreichbare
+	 * Fläche die minimale topologische Entfernung (in Anzahl von Flächenübergängen)
+	 * zur Startfläche berechnet.
+	 *
+	 * @param start die Startfläche für die BFS
+	 * @return eine Map, die jeder Fläche ihren topologischen Level (Abstand) zur
+	 *         Startfläche zuordnet
+	 */
 	public static Map<Face, Integer> bfsFaceLevels(Face start) {
 		Map<Face, Integer> faceLevel = new HashMap<>();
 		Queue<Face> queue = new LinkedList<>();
@@ -37,10 +46,17 @@ public class NeighborhoodAnalysis {
 		return faceLevel;
 	}
 
+	/**
+	 * Gibt alle benachbarten Flächen einer gegebenen Fläche zurück, basierend auf
+	 * den {@code twin}-Beziehungen der Half-Edge-Struktur. Dabei werden sowohl die
+	 * Außenkante als auch alle Lochkonturen berücksichtigt.
+	 *
+	 * @param face die Fläche, deren Nachbarn bestimmt werden sollen
+	 * @return Liste aller angrenzenden (topologisch benachbarten) Flächen
+	 */
 	public static List<Face> getNeighborFaces(Face face) {
 		List<Face> neighbors = new ArrayList<>();
 		Set<Face> uniqueNeighbors = new HashSet<>();
-
 		// Hilfsmethode für eine beliebige geschlossene HalfEdge-Schleife
 		Consumer<HalfEdge> checkNeighbors = (HalfEdge start) -> {
 			HalfEdge current = start;
@@ -52,15 +68,12 @@ public class NeighborhoodAnalysis {
 				current = current.getNext();
 			} while (current != start);
 		};
-
 		// outer
 		checkNeighbors.accept(face.getOuterHalfEdge());
-
 		// holes
 		for (HalfEdge hole : face.getHoles()) {
 			checkNeighbors.accept(hole);
 		}
-
 		neighbors.addAll(uniqueNeighbors);
 		return neighbors;
 	}

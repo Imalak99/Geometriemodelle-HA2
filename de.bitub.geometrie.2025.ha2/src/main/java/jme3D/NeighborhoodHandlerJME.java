@@ -14,6 +14,17 @@ import model.Polyhedron;
 
 public class NeighborhoodHandlerJME {
 
+	/**
+	 * Führt eine kombinierte topologische Analyse in jMonkeyEngine durch, bestehend
+	 * aus der Berechnung der Euler-Poincaré-Charakteristik und einer
+	 * Nachbarschaftsanalyse mittels BFS. Anschließend werden alle betroffenen
+	 * Geometrien farblich entsprechend ihrer topologischen Entfernung von der
+	 * Startfläche eingefärbt.
+	 *
+	 * @param startFace        die vom Benutzer selektierte Startfläche
+	 * @param faceToGeometries Mapping von Flächen auf ihre zugehörigen
+	 *                         Geometrieobjekte
+	 */
 	public static void colorNeighborhood(Face startFace, Map<Face, List<Geometry>> faceToGeometries) {
 		Polyhedron polyhedron = startFace.getBelongsToPolyhedron();
 		EulerOperations.calcEulerPoincareCharacteristic(polyhedron);
@@ -41,6 +52,15 @@ public class NeighborhoodHandlerJME {
 		}
 	}
 
+	/**
+	 * Interpoliert eine Farbe entlang eines HSB-Farbverlaufs von Blau (t = 0) bis
+	 * Rot (t = 1) und konvertiert das Ergebnis in ein {@link ColorRGBA}-Objekt zur
+	 * Verwendung in jMonkeyEngine.
+	 *
+	 * @param t normierter Wert im Bereich [0, 1], der die Farbposition im Verlauf
+	 *          angibt
+	 * @return entsprechende RGBA-Farbe im jME-Format
+	 */
 	private static ColorRGBA hueGradient(double t) {
 		// 240° (Blau) → 0° (Rot)
 		float hue = (float) (240 - 240 * t); // 240 bis 0

@@ -10,7 +10,6 @@ public class Face {
 	private Polyhedron belongsToPolyhedron;
 	private static int count = 0; // Zähler für die Anzahl der HalfEdges, die zu dieser Face gehören
 	private int id = 0; // ID der Face, um sie eindeutig zu identifizieren
-//	private List<Point> points;
 
 	public Face(HalfEdge outerHalfEdge, List<HalfEdge> holes) {
 		this.outerHalfEdge = outerHalfEdge;
@@ -62,13 +61,11 @@ public class Face {
 		HalfEdge start = this.getOuterHalfEdge(); // Startkante des äußeren Randes
 		if (start == null)
 			return points;
-
 		HalfEdge current = start;
 		do {
 			points.add(current.getOrg());
 			current = current.getNext();
 		} while (current != null && current != start);
-
 		return points;
 	}
 
@@ -81,7 +78,6 @@ public class Face {
 			points.add(e.getOrg());
 			e = e.getNext();
 		} while (e != null && e != start);
-
 		return points;
 	}
 
@@ -97,16 +93,13 @@ public class Face {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Face:\n");
-
 		sb.append("  ID: ").append(id).append("\n");
-
 		// Outer boundary
 		if (outerHalfEdge != null) {
 			sb.append("  Outer: ");
 			sb.append(outerHalfEdge.toString());
 			sb.append("\n");
 		}
-
 		// Holes
 		if (holes != null && !holes.isEmpty()) {
 			int i = 1;
@@ -117,13 +110,11 @@ public class Face {
 				i++;
 			}
 		}
-
 		if (belongsToPolyhedron != null) {
 			sb.append("  Belongs to Polyhedron: ").append(belongsToPolyhedron.getName()).append("\n");
 		} else {
 			sb.append("  Belongs to Polyhedron: null\n");
 		}
-
 		return sb.toString();
 	}
 

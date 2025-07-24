@@ -18,7 +18,22 @@ import model.Point;
 import model.Polyhedron;
 
 public class JmeMeshFactory {
-
+	/**
+	 * Erstellt für jede Fläche eines gegebenen Polyeders dreieckige Geometrien in
+	 * jMonkeyEngine, fügt sie dem Szenengraphen hinzu und verknüpft sie über
+	 * bidirektionale Mappings mit dem zugrundeliegenden Datenmodell.
+	 *
+	 * Jede Fläche wird trianguliert und die resultierenden Dreiecke in individuelle
+	 * {@link Geometry}-Objekte überführt. Diese erhalten eine Kopie des übergebenen
+	 * Materials, um spätere Farbänderungen zu ermöglichen.
+	 *
+	 * @param polyhedron       das zu visualisierende Polyeder
+	 * @param faceToGeometries Mapping von Flächen auf zugehörige Geometrieobjekte
+	 * @param geometryToFace   Mapping von Geometrien zurück auf das jeweilige Face
+	 * @param rootNode         jME-Rootknoten, dem alle Geometrien hinzugefügt
+	 *                         werden
+	 * @param materialTemplate Vorlage für das Material aller erzeugten Geometrien
+	 */
 	public static void createGeometries(Polyhedron polyhedron, Map<Face, List<Geometry>> faceToGeometries,
 			Map<Geometry, Face> geometryToFace, Node rootNode, Material materialTemplate) {
 

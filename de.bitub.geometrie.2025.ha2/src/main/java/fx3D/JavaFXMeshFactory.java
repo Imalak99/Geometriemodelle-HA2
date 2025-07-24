@@ -16,6 +16,17 @@ import model.Polyhedron;
 
 public class JavaFXMeshFactory {
 
+	/**
+	 * Erstellt für alle Flächen eines gegebenen Polyeders dreieckige Meshes und
+	 * fügt sie der übergebenen JavaFX-3D-Szene hinzu. Dabei wird jede Fläche
+	 * trianguliert, als {@link MeshView} dargestellt und mit einem Klick-Handler
+	 * zur Nachbarschaftsanalyse versehen.
+	 *
+	 * @param polyhedron   das zu visualisierende Polyeder
+	 * @param faceToMeshes Mapping von Flächen auf zugehörige Mesh-Objekte
+	 * @param meshToFace   Mapping von Mesh-Objekten zurück auf die jeweilige Fläche
+	 * @param world        JavaFX-3D-Gruppe, in die alle Meshes eingefügt werden
+	 */
 	public static void createMeshViews(Polyhedron polyhedron, Map<Face, List<MeshView>> faceToMeshes,
 			Map<MeshView, Face> meshToFace, Group world) {
 
@@ -49,6 +60,17 @@ public class JavaFXMeshFactory {
 		}
 	}
 
+	/**
+	 * Erzeugt für eine Liste von Polyedern die zugehörigen MeshViews und fügt sie
+	 * in die übergebene JavaFX-3D-Szene ein. Jedes Polyeder wird mit horizontalem
+	 * Abstand zueinander positioniert, um eine übersichtliche Darstellung zu
+	 * ermöglichen.
+	 *
+	 * @param polyhedra    Liste der zu visualisierenden Polyeder
+	 * @param faceToMeshes Mapping von Flächen auf zugehörige Mesh-Objekte
+	 * @param meshToFace   Mapping von Mesh-Objekten zurück auf die jeweilige Fläche
+	 * @param world        JavaFX-3D-Gruppe, in die alle Polyeder eingefügt werden
+	 */
 	public static void createMeshViews(List<Polyhedron> polyhedra, Map<Face, List<MeshView>> faceToMeshes,
 			Map<MeshView, Face> meshToFace, Group world) {
 

@@ -28,18 +28,13 @@ public class EulerOperations {
 		int f = calcF(polyhedron);
 		int l = calcL(polyhedron);
 		int s = calcS(polyhedron);
-
 		// Klassische Euler-Charakteristik (z. B. χ = 2 für Kugel, 0 für Torus)
 		int chiClassic = v - e + f - (l - f);
-
 		// Genus berechnen basierend auf klassischem χ
 		int g = calcG(chiClassic, s);
-
 		// Angepasster χ-Wert zur Validierung (sollte 0 sein bei watertight Struktur)
 		int chiAdjusted = chiClassic - 2 * (s - g);
-
 		boolean watertight = isWatertight(polyhedron);
-
 		String resultString = String.format(
 				"χ (klassisch)  = V - E + F - (L - F)\nχ = %d - %d + %d - (%d - %d) = %d\n" + "G (Genus)       = %d\n"
 						+ "χ (angepasst)   = χ - 2 * (S - G) = %d - 2 * (%d - %d) = %d\n" + "Watertight:     %s",
@@ -47,7 +42,6 @@ public class EulerOperations {
 
 		polyhedron.setEulerPoinCareString(resultString);
 		polyhedron.setEulerPoinCare(chiAdjusted);
-
 		return chiAdjusted;
 	}
 
@@ -59,7 +53,6 @@ public class EulerOperations {
 	 */
 	private static int calcV(Polyhedron polyhedron) {
 		int v = polyhedron.getPoints().size();
-//		System.out.println("V (Vertecies): " + v);
 		return v;
 	}
 
@@ -73,7 +66,6 @@ public class EulerOperations {
 	private static int calcE(Polyhedron polyhedron) {
 		List<HalfEdge> edges = polyhedron.getEdges();
 		int e = eulerEdges(edges).size();
-//		System.out.println("E (Edges): " + e);
 		return e;
 	}
 
@@ -85,7 +77,6 @@ public class EulerOperations {
 	 */
 	private static int calcF(Polyhedron polyhedron) {
 		int f = polyhedron.getFaces().size();
-//		System.out.println("F (Faces): " + f);
 		return f;
 	}
 
@@ -99,10 +90,8 @@ public class EulerOperations {
 	private static int calcL(Polyhedron polyhedron) {
 		int l = 0;
 		for (Face face : polyhedron.getFaces()) {
-			// 1 Außenrand + Anzahl Löcher
 			l += 1 + face.getHoles().size();
 		}
-//		System.out.println("L (Loops): " + l);
 		return l;
 	}
 
@@ -116,10 +105,19 @@ public class EulerOperations {
 	 */
 	private static int calcS(Polyhedron polyhedron) {
 		int s = 1;
-//		System.out.println("S (Shells): " + s);
 		return s;
 	}
 
+	/**
+	 * Berechnet den Genus (Anzahl der „Griffe“ bzw. Tunnel) eines Polyeders
+	 * basierend auf der klassischen Euler-Charakteristik und der Anzahl der
+	 * zusammenhängenden Komponenten (Shells).
+	 *
+	 * @param chi klassische Euler-Poincaré-Charakteristik (ohne
+	 *            Topologie-Korrektur)
+	 * @param s   Anzahl der Shells (zusammenhängender Komponenten)
+	 * @return berechneter Genus des Polyeders
+	 */
 	private static int calcG(int chi, int s) {
 		int g = s - chi / 2;
 		return g;
@@ -153,6 +151,15 @@ public class EulerOperations {
 		return uniqueEdges;
 	}
 
+	/**
+	 * Prüft, ob ein Polyeder topologisch geschlossen (watertight) ist, indem für
+	 * jede Kante (repräsentiert durch {@link HalfEdge}) sichergestellt wird, dass
+	 * eine gültige Zwillingskante existiert und diese korrekt zurückverweist.
+	 *
+	 * @param polyhedron das zu prüfende Polyeder
+	 * @return {@code true}, wenn das Modell vollständig geschlossen ist,
+	 *         andernfalls {@code false}
+	 */
 	public static boolean isWatertight(Polyhedron polyhedron) {
 		List<HalfEdge> edges = polyhedron.getEdges();
 		Set<HalfEdge> visited = new HashSet<>();
